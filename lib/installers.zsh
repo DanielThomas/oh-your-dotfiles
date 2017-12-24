@@ -1,31 +1,8 @@
-function info() {
-  printf "  [ \033[00;34m..\033[0m ] %s\n" "$1"
-}
-
-function user() {
-  printf "\r  [ \033[0;33m??\033[0m ] %s " "$1"
-}
-
-function success() {
-  printf "\r\033[2K  [ \033[00;32mOK\033[0m ] %s\n" "$1"
-}
-
-function fail() {
-  printf "\r\033[2K  [ \033[0;31m!!\033[0m ] %s\n" "$1"
-  echo ''
-  exit 1
-}
-
-function run() {
-  set +e
-  info "$1"
-  output=$($2 2>&1)
-  if [ $? -ne 0 ]; then
-    fail "failed to run '$1': $output"
-    exit 1
-  fi
-  set -e
-}
+#!/usr/bin/env zsh
+libdir=${0:a:h}
+source $libdir/terminal.zsh
+source $libdir/homebrew.zsh
+source $libdir/git.zsh
 
 function link_files() {
   case "$1" in
@@ -127,6 +104,11 @@ function run_installers() {
   IFS=$OLD_IFS
 }
 
+function run_postinstall() {
+    info 'running post-installers'
+    dotfiles_find post-install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
+}
+
 function create_localrc() {
   LOCALRC=$HOME/.localrc
   if [ ! -f "$LOCALRC" ]; then
@@ -173,28 +155,6 @@ function pull_repos() {
   done
 }
 
-function zshrc_install() {
-  if [ "$1" = "update" ]; then
-    info 'updating dotfiles'
-    pull_repos
-
-    run_installers
-    brew_upgrade
-    install_formulas
-    run 'cleaning up homebrew' 'brew cleanup'
-    run 'cleaning up homebrew-cask' 'brew cask cleanup'
-  else
-    info 'installing dotfiles'
-    install_dotfiles
-    run_installers
-    install_formulas
-    create_localrc
-  fi
-
-  info 'complete!'
-  echo ''
-}
-
 function install_dotfiles() {
   overwrite_all=false
   backup_all=false
@@ -231,87 +191,28 @@ function install_dotfiles() {
   done
 }
 
-function upgrade_dotfiles() {
-  if [[ `pwd` == $HOME/.dotfiles ]] ; then
-    ./bootstrap.sh update
+function main() {
+  if [ "$1" = "update" ]; then
+    info 'updating dotfiles'
+    pull_repos
+
+    run_installers
+    upgrade_formulas
+    install_formulas
+    run 'cleaning up homebrew' 'brew cleanup'
+    run 'cleaning up homebrew-cask' 'brew cask cleanup'
+    run_postinstall
   else
-    pushd ~/.dotfiles > /dev/null
-    ./bootstrap.sh update
-    popd > /dev/null
-  fi
-}
-
-function install_formulas() {
-  # assume that the installer did it's job, and use the default path for brew if it's not there already
-  if ! test $(which brew); then
-    source $DOTFILES_ROOT/brew/path.zsh
+    info 'installing dotfiles'
+    install_dotfiles
+    run_installers
+    install_formulas
+    run_postinstall
+    create_localrc
   fi
 
-  for file in `dotfiles_find install.homebrew-cask`; do
-    for formula in `cat $file`; do
-      brew_install $formula cask
-    done
-  done
-
-  for file in `dotfiles_find install.homebrew`; do
-    for formula in `cat $file`; do
-      brew_install $formula
-    done
-  done
+  info 'complete!'
+  echo ''
 }
 
-function brew_install() {
-  formula=$1
-  if ! brew $2 ls --versions $formula 2> /dev/null | grep -q $formula; then
-    if brew $2 install $formula > /dev/null 2>&1; then
-      success "installed $formula"
-    else
-      fail "failed to install $formula"
-    fi
-  fi
-}
-
-
-function brew_upgrade() {
-  run 'updating homebrew' 'brew update'
-  for update in $(brew outdated); do
-    formula=$(echo "$update" | cut -d ' ' -f 1)
-    run "upgrading $update" "brew upgrade $formula"
-  done
-}
-
-git_clone () {
-  repo=$(head -n 1 $1)
-  dest=$2
-  if ! git clone --quiet $repo $dest; then
-    fail "clone for $repo failed"
-  fi
-
-  success "cloned $repo to `basename $dest`"
-
-  dir=$(dirname $1)
-  base=$(basename ${1%.*})
-  for patch in $(find $dir -maxdepth 2 -name $base\*.gitpatch); do
-    pushd $dest >> /dev/null
-    if ! git am --quiet $patch; then
-      fail "apply patch failed"
-    fi
-
-    success "applied $patch"
-    popd >> /dev/null
-  done
-}
-
-function pull_repos() {
-  for file in $(dotfiles_find \*.gitrepo); do
-    repo="$HOME/.`basename \"${file%.*}\"`"
-    pushd $repo > /dev/null
-    if ! git pull --rebase --quiet origin master; then
-      fail "could not update $repo"
-    fi
-    success "updated $repo"
-    popd >> /dev/null
-  done
-}
-
-zshrc_install
+main "$@"

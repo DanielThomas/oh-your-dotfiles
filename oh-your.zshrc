@@ -25,9 +25,17 @@ ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
 # dotfiles location
 export DOTFILES=$HOME/.dotfiles
 
-# install/update
+# install/update/reload
 function dotfiles_install() {
-  $ZSHRC/lib/install.zsh
+  $ZSHRC/lib/installers.zsh
+}
+
+function dotfiles_update() {
+  $ZSHRC/lib/installers.zsh update
+}
+
+function dotfiles_reload() {
+  source $HOME/.zshrc
 }
 
 # find all zsh files
@@ -38,12 +46,6 @@ config_files=($(find -L "$DOTFILES" -name \*.zsh))
 if [[ -a $HOME/.localrc ]]
 then
   source $HOME/.localrc
-fi
-
-# make sure DEFAULT_USER has been set
-if [ -z "$DEFAULT_USER" ]; then
-  echo "Please set DEFAULT_USER in your ~/.localrc"
-  exit 1
 fi
 
 ## configure and load oh-my-zsh ##
@@ -61,7 +63,10 @@ fi
 # disable update, we handle that
 DISABLE_AUTO_UPDATE="true"
 
-# configure theme
+# set default user
+DEFAULT_USER=$(whoami)
+
+# configure theme(s)
 ZSH_THEME="agnoster"
 
 # configure plugins
@@ -96,10 +101,6 @@ for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/oh-my-zsh.zsh}
 do
   source $file
 done
-
-# initialize autocomplete here, otherwise functions won't be loaded
-autoload -U compinit
-compinit
 
 # load every completion after autocomplete loads
 for file in ${(M)config_files:#*/completion.zsh}
