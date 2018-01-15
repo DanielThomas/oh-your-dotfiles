@@ -93,6 +93,10 @@ do
   source $file
 done
 
+# default homebrew locations
+BREW=/usr/local/bin:/usr/local/sbin
+export PATH=$BREW:$PATH
+
 # put the bin/ directories first on the path
 export PATH=$DOTFILES/bin:$DOTFILES/local/bin:$PATH
 

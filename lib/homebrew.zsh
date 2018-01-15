@@ -1,8 +1,5 @@
-function install_formulas() {
-  # assume that the installer did it's job, and use the default path for brew if it's not there already
-  if ! test $(which brew); then
-    source $DOTFILES_ROOT/brew/path.zsh
-  fi
+function brew_install_formulas() {
+  brew_check_and_install
 
   for file in `dotfiles_find install.homebrew-cask`; do
     for formula in `cat $file`; do
@@ -17,6 +14,14 @@ function install_formulas() {
   done
 }
 
+function brew_upgrade_formulas() {
+  brew_check_and_install
+
+  run "updating homebrew" "brew update"
+  brew_upgrade
+  brew_upgrade cask
+}
+
 function brew_install() {
   formula=$1
   if ! brew $2 ls --versions $formula 2> /dev/null | grep -q $formula; then
@@ -28,16 +33,19 @@ function brew_install() {
   fi
 }
 
-function upgrade_formulas() {
-  run "updating homebrew" "brew update"
-  brew_upgrade
-  brew_upgrade cask
-}
-
 function brew_upgrade() {
   info "upgrading homebrew $1"
   for update in $(brew $1 outdated); do
     formula=$(echo "$update" | cut -d ' ' -f 1)
     run "upgrading $update" "brew $1 upgrade $formula"
   done
+}
+
+function brew_check_and_install() {
+  if ! test $(which brew); then
+    info "homebrew is not installed, installing"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew tap caskroom/versions
+    brew tap homebrew/versions
+  fi
 }

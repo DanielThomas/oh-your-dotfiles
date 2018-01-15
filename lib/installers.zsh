@@ -196,9 +196,8 @@ function main() {
     info 'updating dotfiles'
     pull_repos
 
-    run_installers
-    upgrade_formulas
-    install_formulas
+    brew_upgrade_formulas
+    brew_install_formulas
     run 'cleaning up homebrew' 'brew cleanup'
     run 'cleaning up homebrew-cask' 'brew cask cleanup'
     run_postinstall
@@ -206,7 +205,7 @@ function main() {
     info 'installing dotfiles'
     install_dotfiles
     run_installers
-    install_formulas
+    brew_install_formulas
     run_postinstall
     create_localrc
   fi
