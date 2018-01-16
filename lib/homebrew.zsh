@@ -1,12 +1,14 @@
-function brew_install_formulas() {
-  brew_check_and_install
+brew_installed=""
 
+function brew_install_formulas() {
+  brew_installed=$(brew cask ls --versions 2> /dev/null)
   for file in `dotfiles_find install.homebrew-cask`; do
     for formula in `cat $file`; do
       brew_install $formula cask
     done
   done
 
+  brew_installed=$(brew ls --versions 2> /dev/null)
   for file in `dotfiles_find install.homebrew`; do
     for formula in `cat $file`; do
       brew_install $formula
@@ -15,16 +17,17 @@ function brew_install_formulas() {
 }
 
 function brew_upgrade_formulas() {
-  brew_check_and_install
-
-  run "updating homebrew" "brew update"
+  run 'updating homebrew' 'brew update'
   brew_upgrade
   brew_upgrade cask
+  run 'cleaning up homebrew' 'brew cleanup'
+  run 'cleaning up homebrew-cask' 'brew cask cleanup'
 }
 
 function brew_install() {
+  brew_check_and_install
   formula=$1
-  if ! brew $2 ls --versions $formula 2> /dev/null | grep -q $formula; then
+  if ! echo $brew_installed | grep -q $formula; then
     if brew $2 install $formula > /dev/null 2>&1; then
       success "installed $formula"
     else

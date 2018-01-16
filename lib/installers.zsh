@@ -195,11 +195,8 @@ function main() {
   if [ "$1" = "update" ]; then
     info 'updating dotfiles'
     pull_repos
-
     brew_upgrade_formulas
     brew_install_formulas
-    run 'cleaning up homebrew' 'brew cleanup'
-    run 'cleaning up homebrew-cask' 'brew cask cleanup'
     run_postinstall
   else
     info 'installing dotfiles'
