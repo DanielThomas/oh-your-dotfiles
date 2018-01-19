@@ -20,14 +20,19 @@ git_clone () {
   done
 }
 
-function pull_repos() {
+function git_pull_repos() {
   for file in $(dotfiles_find \*.gitrepo); do
     repo="$HOME/.`basename \"${file%.*}\"`"
-    pushd $repo > /dev/null
-    if ! git pull --rebase --quiet origin master; then
-      fail "could not update $repo"
-    fi
-    success "updated $repo"
-    popd >> /dev/null
+    git_pull $repo &
   done
+  wait
+}
+
+function git_pull() {
+  pushd $1 > /dev/null
+  if ! git pull --rebase --quiet origin master; then
+    fail "could not update $repo"
+  fi
+  success "updated $repo"
+  popd >> /dev/null
 }
