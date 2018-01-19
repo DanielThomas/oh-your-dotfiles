@@ -16,11 +16,13 @@ function brew_install_formulas() {
   done
 }
 
+function brew_update() {
+    run 'updating homebrew' 'brew update'
+}
+
 function brew_upgrade_formulas() {
-  run 'updating homebrew' 'brew update'
   brew_upgrade &
   brew_upgrade cask &
-  wait
 }
 
 function brew_install() {

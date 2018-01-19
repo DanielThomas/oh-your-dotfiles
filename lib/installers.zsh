@@ -160,7 +160,9 @@ function dotfiles_install() {
 function main() {
   if [ "$1" = "update" ]; then
     info 'updating dotfiles'
+    brew_update &
     git_pull_repos
+    wait
     brew_upgrade_formulas
     brew_install_formulas
     run_postinstall
