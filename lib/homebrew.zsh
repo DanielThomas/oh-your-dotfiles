@@ -18,6 +18,7 @@ function brew_install_formulas() {
 
 function brew_update() {
     run 'updating homebrew' 'brew update'
+    success 'updated homebrew'
 }
 
 function brew_upgrade_formulas() {
