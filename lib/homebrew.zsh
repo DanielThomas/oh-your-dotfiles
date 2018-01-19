@@ -18,10 +18,9 @@ function brew_install_formulas() {
 
 function brew_upgrade_formulas() {
   run 'updating homebrew' 'brew update'
-  brew_upgrade
-  brew_upgrade cask
-  run 'cleaning up homebrew' 'brew cleanup'
-  run 'cleaning up homebrew-cask' 'brew cask cleanup'
+  brew_upgrade &
+  brew_upgrade cask &
+  wait
 }
 
 function brew_install() {
@@ -37,11 +36,13 @@ function brew_install() {
 }
 
 function brew_upgrade() {
+  brew="brew $1"
   info "upgrading homebrew $1"
   for update in $(brew $1 outdated); do
     formula=$(echo "$update" | cut -d ' ' -f 1)
-    run "upgrading $update" "brew $1 upgrade $formula"
+    run "upgrading $update" "$brew upgrade $formula"
   done
+  run "cleaning up homebrew $1" "$brew cleanup"
 }
 
 function brew_check_and_install() {
