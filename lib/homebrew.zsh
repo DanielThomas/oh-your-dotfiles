@@ -37,12 +37,11 @@ function brew_install() {
 
 function brew_upgrade() {
   brew="brew $1"
-  info "upgrading homebrew $1"
-  for update in $(brew $1 outdated); do
-    formula=$(echo "$update" | cut -d ' ' -f 1)
-    run "upgrading $update" "$brew upgrade $formula"
-  done
-  run "cleaning up homebrew $1" "$brew cleanup"
+  outdated=$(eval $brew outdated)
+  if [ -n "$outdated" ]; then
+    run "upgrading homebrew $1 ($outdated)" "$brew upgrade"
+    run "cleaning up homebrew $1" "$brew cleanup"
+  fi
 }
 
 function brew_check_and_install() {
