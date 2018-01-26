@@ -45,9 +45,9 @@ function install_file() {
     backup=false
     skip=false
 
-    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]; then
+    if [ "$overwrite_all" = "false" ] && [ "$backup_all" = "false" ] && [ "$skip_all" = "false" ]; then
       user "File already exists: `basename $file_dest`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
-      read -n 1 action
+      read -r action
 
       case "$action" in
         o )
@@ -67,17 +67,17 @@ function install_file() {
       esac
     fi
 
-    if [ "$overwrite" == "true" ] || [ "$overwrite_all" == "true" ]; then
+    if [ "$overwrite" = "true" ] || [ "$overwrite_all" = "true" ]; then
       rm -rf $file_dest
       success "removed $file_dest"
     fi
 
-    if [ "$backup" == "true" ] || [ "$backup_all" == "true" ]; then
+    if [ "$backup" = "true" ] || [ "$backup_all" = "true" ]; then
       mv $file_dest $file_dest\.backup
       success "moved $file_dest to $file_dest.backup"
     fi
 
-    if [ "$skip" == "false" ] && [ "$skip_all" == "false" ]; then
+    if [ "$skip" = "false" ] && [ "$skip_all" = "false" ]; then
       link_files $file_type $file_source $file_dest
     else
       success "skipped $file_source"
