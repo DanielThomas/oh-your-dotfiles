@@ -5,7 +5,7 @@ function mas_install_formulas() {
   for file in `dotfiles_find install.mas`; do
     while read formula; do
       mas_install $formula
-    done<$file
+    done < <(grep ^ $file)
   done
 }
 
