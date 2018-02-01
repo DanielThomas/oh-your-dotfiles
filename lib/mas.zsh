@@ -10,12 +10,10 @@ function mas_install_formulas() {
 }
 
 function mas_upgrade_formulas() {
-  mas outdated 2> /dev/null | while read formula; do
-    no_version="${formula% *}"
-    id="${no_version%% *}"
-    name="${no_version#* }"
-    run "upgrading $name" "mas upgrade $id"
-  done
+  outdated=$(mas outdated 2> /dev/null | cut -d ' ' -f2- | cut -d '(' -f1 | sed -e 's/ *$//' | sed -e :a -e '$!N; s/\n/, /; ta')
+  if [ -n "$outdated" ]; then
+    run "upgrading apps ($outdated)" "mas upgrade"
+  fi
 }
 
 function mas_install() {
