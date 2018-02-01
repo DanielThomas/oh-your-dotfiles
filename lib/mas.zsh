@@ -14,7 +14,7 @@ function mas_upgrade_formulas() {
     no_version="${formula% *}"
     id="${no_version%% *}"
     name="${no_version#* }"
-    run "upgrading mas ($name)" "mas upgrade $id"
+    run "upgrading $name" "mas upgrade $id"
   done
 }
 

@@ -42,7 +42,14 @@ Installation steps during bootstrap can be handled in three ways:
 - `install.sh`: An installation shellscript
 - `install.homebrew`: A list of Homebrew formulas to install
 - `install.homebrew-cask`: A list of Homebrew casks to install
+- `install.mas`: A list of App Store apps to install
 - `install.open`: A list of files to be handled by the default application association using the `open` command
+
+#### Installing from the App Store with `install.mas` files ####
+
+Applications from the App Store are referenced by a numeric id rather than a name.
+In order to find out the id you can use the command `mas search <term>`.
+Entries in `install.mas` should be in the format `<id> <name>` (the same format as the results of `mas search`).
 
 ### Plugins ###
 
