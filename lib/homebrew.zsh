@@ -40,7 +40,7 @@ function brew_install() {
 
 function brew_upgrade() {
   brew="brew $1"
-  outdated=$(eval $brew outdated)
+  outdated=$(eval $brew outdated | sed -e :a -e '$!N; s/\n/, /; ta')
   if [ -n "$outdated" ]; then
     run "upgrading homebrew $1 ($outdated)" "$brew upgrade"
     run "cleaning up homebrew $1" "$brew cleanup"
