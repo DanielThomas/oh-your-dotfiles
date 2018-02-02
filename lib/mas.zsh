@@ -1,18 +1,23 @@
 mas_installed=""
 
 function mas_install_formulas() {
-  mas_installed=$(mas list 2> /dev/null)
-  for file in `dotfiles_find install.mas`; do
-    while read formula; do
-      mas_install $formula
-    done < <(grep ^ $file)
-  done
+  mas_files=`dotfiles_find install.mas`
+  if [ -n "$mas_files" ]; then
+    mas_installed=$(mas list 2> /dev/null)
+    for file in $mas_files; do
+      while read formula; do
+        mas_install $formula
+      done < <(grep ^ $file)
+    done
+  fi
 }
 
 function mas_upgrade_formulas() {
-  outdated=$(mas outdated 2> /dev/null | cut -d ' ' -f2- | cut -d '(' -f1 | sed -e 's/ *$//' | sed -e :a -e '$!N; s/\n/, /; ta')
-  if [ -n "$outdated" ]; then
-    run "upgrading apps ($outdated)" "mas upgrade"
+  if test $(which mas); then
+    outdated=$(mas outdated 2> /dev/null | cut -d ' ' -f2- | cut -d '(' -f1 | sed -e 's/ *$//' | sed -e :a -e '$!N; s/\n/, /; ta')
+    if [ -n "$outdated" ]; then
+      run "upgrading apps ($outdated)" "mas upgrade"
+    fi
   fi
 }
 
