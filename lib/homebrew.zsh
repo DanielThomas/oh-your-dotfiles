@@ -24,6 +24,7 @@ function brew_update() {
 function brew_upgrade_formulas() {
   brew_upgrade &
   brew_upgrade cask &
+  wait
 }
 
 function brew_install() {
