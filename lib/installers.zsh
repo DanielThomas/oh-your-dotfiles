@@ -2,6 +2,7 @@
 libdir=${0:a:h}
 source $libdir/terminal.zsh
 source $libdir/homebrew.zsh
+source $libdir/mas.zsh
 source $libdir/git.zsh
 
 function link_files() {
@@ -165,12 +166,15 @@ function main() {
     wait
     brew_upgrade_formulas
     brew_install_formulas
+    mas_upgrade_formulas
+    mas_install_formulas
     run_postinstall
   else
     info 'installing dotfiles'
     dotfiles_install
     run_installers
     brew_install_formulas
+    mas_install_formulas
     run_postinstall
     create_localrc
   fi

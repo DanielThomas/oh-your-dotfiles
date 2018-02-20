@@ -67,7 +67,7 @@ DISABLE_AUTO_UPDATE="true"
 DEFAULT_USER=$(whoami)
 
 # configure theme(s)
-ZSH_THEME="agnoster"
+ZSH_THEME="powerlevel9k/powerlevel9k"
 
 # configure plugins
 plugins=("${(@f)$(
