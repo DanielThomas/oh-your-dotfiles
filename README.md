@@ -62,6 +62,6 @@ If your shell is taking an excessive amount of time to start, run `zsh` with the
 
     PROFILE_STARTUP=true zsh
 
-Then run `scripts/startlog.py` against the output in `/tmp` to determine the contributors to startup time. For more details, see:
+Then run `tools/startlog.py` against the output in `/tmp` to determine the contributors to startup time. For more details, see:
 
 [https://kev.inburke.com/kevin/profiling-zsh-startup-time/](https://kev.inburke.com/kevin/profiling-zsh-startup-time/)
