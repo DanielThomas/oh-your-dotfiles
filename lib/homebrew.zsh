@@ -1,6 +1,7 @@
 brew_installed=""
 
 function brew_install_formulas() {
+  brew_check_and_install
   brew_installed=$(brew cask ls --versions 2> /dev/null)
   for file in `dotfiles_find install.homebrew-cask`; do
     for formula in `cat $file`; do
