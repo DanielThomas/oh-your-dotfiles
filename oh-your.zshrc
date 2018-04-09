@@ -71,10 +71,8 @@ ZSH_THEME="agnoster"
 
 # configure plugins
 plugins=("${(@f)$(
-# define oh-my-zsh plugins implicitly based on topics
 find $DOTFILES $DOTFILES/local/ -not -name '.git' -d 1 -type d -exec basename {} \;
 
-# add any plugins defined by files
 find -L $DOTFILES -name oh-my-zsh.plugins -d 2 -exec cat {} \;
 )}")
 
