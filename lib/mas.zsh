@@ -14,7 +14,7 @@ function mas_install_formulas() {
 
 function mas_upgrade_formulas() {
   if test $(which mas); then
-    outdated=$(mas outdated 2> /dev/null | cut -d ' ' -f2- | cut -d '(' -f1 | sed -e 's/ *$//' | sed -e :a -e '$!N; s/\n/, /; ta')
+    outdated=$(mas outdated 2> /dev/null | cut -d ' ' -f2- | cut -d '(' -f1 | cut -d– -f1 | cut -d- -f1 | sed -e 's/ *$//' | sed -e :a -e '$!N; s/\n/, /; ta')
     if [ -n "$outdated" ]; then
       run "upgrading apps ($outdated)" "mas upgrade"
     fi
