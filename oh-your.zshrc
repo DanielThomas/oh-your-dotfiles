@@ -19,9 +19,8 @@ function realpath() {
   echo "$REALPATH"
 }
 
-# oh-your-zshrc location
+# oh-your-zshrc
 ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
-
 source "$ZSHRC/lib/dotfiles.zsh"
 
 # find all zsh files
@@ -40,7 +39,6 @@ ZSH=$ZSHRC/oh-my-zsh
 if [ ! -d "$ZSH" ]; then
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "oh-my-zsh is not installed"
-    # TODO install if necessary
   else
     ZSH="$HOME/.oh-my-zsh"
   fi
@@ -67,7 +65,12 @@ do
   source $file
 done
 
-source $ZSH/oh-my-zsh.sh
+OH_MY_ZSH="$ZSH/oh-my-zsh.sh"
+
+if [[ -a "$OH_MY_ZSH" ]]
+then
+  source "$OH_MY_ZSH"
+fi
 
 ## load dotfiles ##
 

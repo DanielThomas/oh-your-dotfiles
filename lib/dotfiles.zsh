@@ -1,4 +1,6 @@
 # install/update/reload
+local defaults=$(realpath "${0:a:h}/../defaults")
+
 function dotfiles_install() {
   $ZSHRC/lib/installers.zsh
 }
@@ -12,7 +14,7 @@ function dotfiles_reload() {
 }
 
 function dotfiles_find() {
-  find $(dotfiles) -not -name '.git' -name "$1"
+  find $defaults $(dotfiles) -not -name '.git' -name "$1"
 }
 
 function dotfiles() {

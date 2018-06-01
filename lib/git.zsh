@@ -30,7 +30,7 @@ function git_pull_repos() {
 
 function git_pull() {
   pushd $1 > /dev/null
-  if ! git pull --rebase --quiet origin master; then
+  if ! git pull origin master --rebase --quiet; then
     fail "could not update $repo"
   fi
   success "updated $repo"
