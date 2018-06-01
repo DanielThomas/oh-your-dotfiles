@@ -35,7 +35,7 @@ function mas_install() {
 }
 
 function mas_check_and_install() {
-  if ! test $(which mas); then
+  if ! type mas > /dev/null; then
     info "mas is not installed, installing"
     brew_check_and_install
     brew_install mas
