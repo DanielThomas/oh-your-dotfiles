@@ -27,7 +27,7 @@ function dotfiles_reload() {
 }
 
 function dotfiles_find() {
-  find $defaults $(dotfiles) -not -name '.git' -name "$1"
+  find $defaults $(dotfiles) -name "$1" -not -iwholename '*.git*'
 }
 
 function dotfiles() {
