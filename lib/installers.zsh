@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 libdir=${0:a:h}
+source $libdir/dotfiles.zsh
 source $libdir/terminal.zsh
 source $libdir/homebrew.zsh
 source $libdir/mas.zsh
@@ -94,15 +95,12 @@ function run_installers() {
   dotfiles_find install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 
   info 'opening files'
-  OLD_IFS=$IFS
-  IFS=''
   for file_source in $(dotfiles_find install.open); do
     for file in `cat $file_source`; do
       expanded_file=$(eval echo $file)
       open_file $expanded_file
     done
   done
-  IFS=$OLD_IFS
 }
 
 function run_postinstall() {
@@ -116,10 +114,6 @@ function create_localrc() {
     echo "DEFAULT_USER=$USER" > $LOCALRC
     success "created $LOCALRC"
   fi
-}
-
-function dotfiles_find() {
-    find -L "$DOTFILES" -maxdepth 3 -name "$1"
 }
 
 function dotfiles_install() {

@@ -4,17 +4,20 @@ Inspired by and compatible with Zach Holman's dotfiles - https://github.com/holm
 
 ## Install ##
 
-...
+1. Clone this repository and symlink `oh-your.zshrc` to `$HOME/.zshrc`.
+2. ...
 
 ## Features ##
 
-The repository is ordered by topic. Refer to the readme files in the individual topic directories for details of the features they provide.
+...
 
 See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
 
 ## How it works ##
 
-Files are processed automatically by `.zshrc` or the installation process depending on their extension. Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
+Dotfiles sources are found using the pattern `$HOME/.*dotfiles*`.
+
+The files within are processed automatically by `.zshrc` or the installation process depending on their extension. Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
 
 ### Environment ###
 
@@ -62,6 +65,6 @@ If your shell is taking an excessive amount of time to start, run `zsh` with the
 
     PROFILE_STARTUP=true zsh
 
-Then run `scripts/startlog.py` against the output in `/tmp` to determine the contributors to startup time. For more details, see:
+Then run `tools/startlog.py` against the output in `/tmp` to determine the contributors to startup time. For more details, see:
 
 [https://kev.inburke.com/kevin/profiling-zsh-startup-time/](https://kev.inburke.com/kevin/profiling-zsh-startup-time/)

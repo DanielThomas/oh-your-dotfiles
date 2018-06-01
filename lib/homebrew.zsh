@@ -54,6 +54,5 @@ function brew_check_and_install() {
     info "homebrew is not installed, installing"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew tap caskroom/versions
-    brew tap homebrew/versions
   fi
 }
