@@ -4,17 +4,20 @@ Inspired by and compatible with Zach Holman's dotfiles - https://github.com/holm
 
 ## Install ##
 
-...
+1. Clone this repository and symlink `oh-your.zshrc` to `$HOME/.zshrc`.
+2. ...
 
 ## Features ##
 
-The repository is ordered by topic. Refer to the readme files in the individual topic directories for details of the features they provide.
+...
 
 See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
 
 ## How it works ##
 
 Files are processed automatically by `.zshrc` or the installation process depending on their extension. Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
+
+Multiple dotfiles repositories are supported should match the pattern `$HOME/.*dotfiles*`.
 
 ### Environment ###
 

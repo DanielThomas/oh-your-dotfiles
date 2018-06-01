@@ -22,25 +22,11 @@ function realpath() {
 # oh-your-zshrc location
 ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
 
-# dotfiles location
-export DOTFILES=$HOME/.dotfiles
-
-# install/update/reload
-function dotfiles_install() {
-  $ZSHRC/lib/installers.zsh
-}
-
-function dotfiles_update() {
-  $ZSHRC/lib/installers.zsh update
-}
-
-function dotfiles_reload() {
-  source $HOME/.zshrc
-}
+source "$ZSHRC/lib/dotfiles.zsh"
 
 # find all zsh files
 typeset -U config_files
-config_files=($(find -L "$DOTFILES" -name \*.zsh))
+config_files=($(dotfiles_find \*.zsh))
 
 # use .localrc for things that need to be kept secret
 if [[ -a $HOME/.localrc ]]
@@ -71,9 +57,9 @@ ZSH_THEME="agnoster"
 
 # configure plugins
 plugins=("${(@f)$(
-find $DOTFILES $DOTFILES/local/ -not -name '.git' -d 1 -type d -exec basename {} \;
+find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
 
-find -L $DOTFILES -name oh-my-zsh.plugins -d 2 -exec cat {} \;
+find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
 )}")
 
 for file in ${(M)config_files:#*/oh-my-zsh.zsh}
@@ -96,7 +82,10 @@ BREW=/usr/local/bin:/usr/local/sbin
 export PATH=$BREW:$PATH
 
 # put the bin/ directories first on the path
-export PATH=$DOTFILES/bin:$DOTFILES/local/bin:$PATH
+for d in $(dotfiles)
+do
+  export PATH=$d/bin:$PATH
+done
 
 # load everything else
 for file in ${${${config_files:#*/path.zsh}:#*/completion.zsh}:#*/oh-my-zsh.zsh}
