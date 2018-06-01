@@ -38,7 +38,7 @@ fi
 ZSH=$ZSHRC/oh-my-zsh
 if [ ! -d "$ZSH" ]; then
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    echo "oh-my-zsh is not installed"
+    echo "oh-my-zsh is not installed, run dotfiles_install"
   else
     ZSH="$HOME/.oh-my-zsh"
   fi
