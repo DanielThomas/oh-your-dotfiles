@@ -121,16 +121,16 @@ function dotfiles_install() {
   backup_all=false
   skip_all=false
 
-  # symlinks
-  for file_source in $(dotfiles_find \*.symlink); do
-    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    install_file link $file_source $file_dest
-  done
-
   # git repositories
   for file_source in $(dotfiles_find \*.gitrepo); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     install_file git $file_source $file_dest
+  done
+
+  # symlinks
+  for file_source in $(dotfiles_find \*.symlink); do
+    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
+    install_file link $file_source $file_dest
   done
 
   # preferences
