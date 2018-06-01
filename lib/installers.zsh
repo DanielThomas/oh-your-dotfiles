@@ -79,9 +79,9 @@ function install_file() {
       success "moved $file_dest to $file_dest.backup"
     fi
 
-    if [ "$skip" = "false" ] && [ "$skip_all" = "false" ]; then
+    if [ "$skip" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ]; then
       link_files $file_type $file_source $file_dest
-    else
+    elif [ "$skip_all_silent" = "false" ]; then
       success "skipped $file_source"
     fi
 
@@ -120,12 +120,21 @@ function dotfiles_install() {
   overwrite_all=false
   backup_all=false
   skip_all=false
+  skip_all_silent=false
 
   # git repositories
   for file_source in $(dotfiles_find \*.gitrepo); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     install_file git $file_source $file_dest
   done
+
+  # repeat git repositories, skipping existing and suppressing logging so we pickup dotfiles added by the previous step
+  skip_all_silent=true
+  for file_source in $(dotfiles_find \*.gitrepo); do
+    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
+    install_file git $file_source $file_dest
+  done
+  skip_all_silent=false
 
   # symlinks
   for file_source in $(dotfiles_find \*.symlink); do
