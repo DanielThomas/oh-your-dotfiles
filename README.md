@@ -15,9 +15,9 @@ See https://github.com/DanielThomas/dotfiles for an example of a dotfiles reposi
 
 ## How it works ##
 
-Files are processed automatically by `.zshrc` or the installation process depending on their extension. Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
+Dotfiles sources are found using the pattern `$HOME/.*dotfiles*`.
 
-Multiple dotfiles repositories are supported should match the pattern `$HOME/.*dotfiles*`.
+The files within are processed automatically by `.zshrc` or the installation process depending on their extension. Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
 
 ### Environment ###
 
