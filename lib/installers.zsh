@@ -163,6 +163,8 @@ function main() {
     mas_upgrade_formulas
     mas_install_formulas
     run_postinstall
+
+    info 'complete!'
   else
     info 'installing dotfiles'
     dotfiles_install
@@ -171,9 +173,10 @@ function main() {
     mas_install_formulas
     run_postinstall
     create_localrc
+
+    info 'complete! use dotfiles_update to keep up to date'
   fi
 
-  info 'complete!'
   echo ''
 }
 
