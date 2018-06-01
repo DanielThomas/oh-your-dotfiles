@@ -21,6 +21,7 @@ git_clone () {
 }
 
 function git_pull_repos() {
+  git_pull "$ZSHRC" &
   for file in $(dotfiles_find \*.gitrepo); do
     repo="$HOME/.`basename \"${file%.*}\"`"
     git_pull $repo &

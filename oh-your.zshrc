@@ -20,7 +20,7 @@ function realpath() {
 }
 
 # oh-your-zshrc
-ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
+export ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
 source "$ZSHRC/lib/dotfiles.zsh"
 
 # find all zsh files
