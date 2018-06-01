@@ -21,9 +21,7 @@ git_clone () {
 }
 
 function git_pull_repos() {
-  info 'updating oh-your-zshrc'
-  git_pull "$ZSHRC"
-
+  git_pull "$ZSHRC" &
   for file in $(dotfiles_find \*.gitrepo); do
     repo="$HOME/.`basename \"${file%.*}\"`"
     git_pull $repo &
@@ -36,6 +34,6 @@ function git_pull() {
   if ! git pull origin master --rebase --quiet; then
     fail "could not update $repo"
   fi
-  success "updated $repo"
+  success "updated $1"
   popd >> /dev/null
 }
