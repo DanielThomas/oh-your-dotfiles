@@ -24,7 +24,7 @@ function link_files() {
 }
 
 function link_file() {
-  ln -s $1 $2
+  ln -s -f $1 $2
   success "linked $1 to $2"
 }
 
