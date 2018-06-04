@@ -33,32 +33,28 @@ then
   source $HOME/.localrc
 fi
 
-## configure and load oh-my-zsh ##
-
 ZSH=$ZSHRC/oh-my-zsh
 if [ ! -d "$ZSH" ]; then
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "oh-my-zsh is not installed, run dotfiles_install"
+    return
   else
     ZSH="$HOME/.oh-my-zsh"
   fi
 fi
 
-# disable update, we handle that
-DISABLE_AUTO_UPDATE="true"
-
-# set default user
 DEFAULT_USER=$(whoami)
-
-# configure theme(s)
+DISABLE_AUTO_UPDATE="true"
 ZSH_THEME="agnoster"
 
 # configure plugins
-plugins=("${(@f)$(
-find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
+if [ ! -z "$(dotfiles)" ]; then
+  plugins=("${(@f)$(
+  find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
 
-find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
-)}")
+  find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
+  )}")
+fi
 
 for file in ${(M)config_files:#*/oh-my-zsh.zsh}
 do
