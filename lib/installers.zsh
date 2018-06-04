@@ -34,7 +34,7 @@ function copy_file() {
 }
 
 function open_file() {
-  run "opening $1" "open '$1'"
+  run "opening $1" "open $1"
   success "opened $1"
 }
 
@@ -96,10 +96,14 @@ function run_installers() {
 
   info 'opening files'
   for file_source in $(dotfiles_find install.open); do
+    OLD_IFS=$IFS
+    IFS=$'\n'
+    basedir="$(dirname $file_source)"
     for file in `cat $file_source`; do
-      expanded_file=$(eval echo $file)
-      open_file $expanded_file
+      canonical_file="$basedir/$file"
+      open_file "$canonical_file"
     done
+    IFS=$OLD_IFS
   done
 }
 
