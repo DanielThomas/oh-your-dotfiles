@@ -70,7 +70,7 @@ function install_file() {
     fi
 
     if [ "$overwrite" = "true" ] || [ "$overwrite_all" = "true" ]; then
-      rm -rf $file_dest
+      rm -rf "$file_dest"
       success "removed $file_dest"
       link_files $file_type $file_source $file_dest
     fi
@@ -78,6 +78,7 @@ function install_file() {
     if [ "$backup" = "true" ] || [ "$backup_all" = "true" ]; then
       mv $file_dest $file_dest\.backup
       success "moved $file_dest to $file_dest.backup"
+      link_files $file_type $file_source $file_dest
     fi
 
     if [ "$skip" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ]; then
@@ -85,9 +86,6 @@ function install_file() {
     elif [ "$skip_all_silent" = "false" ]; then
       success "skipped $file_source"
     fi
-
-  else
-    link_files $file_type $file_source $file_dest
   fi
 }
 
