@@ -15,8 +15,10 @@ function brew_install_formulas() {
 }
 
 function brew_update() {
+  if type brew > /dev/null; then
     run 'updating homebrew' 'brew update'
     success 'updated homebrew'
+  fi
 }
 
 function brew_upgrade_formulas() {
