@@ -72,6 +72,7 @@ function install_file() {
     if [ "$overwrite" = "true" ] || [ "$overwrite_all" = "true" ]; then
       rm -rf $file_dest
       success "removed $file_dest"
+      link_files $file_type $file_source $file_dest
     fi
 
     if [ "$backup" = "true" ] || [ "$backup_all" = "true" ]; then
