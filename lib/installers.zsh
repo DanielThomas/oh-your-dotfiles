@@ -177,7 +177,7 @@ function main() {
     mas_install_formulas
     run_postinstall
 
-    info 'complete!'
+    info 'complete! restart your session for environment changes to take effect'
   else
     info 'installing dotfiles'
     dotfiles_install
@@ -187,7 +187,7 @@ function main() {
     run_postinstall
     create_localrc
 
-    info 'complete! use dotfiles_update to keep up to date'
+    info 'complete! use dotfiles_update to keep up to date. restart your session for environment changes to take effect'
   fi
 
   echo ''
