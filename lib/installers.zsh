@@ -124,7 +124,6 @@ function dotfiles_install() {
   overwrite_all=false
   backup_all=false
   skip_all=false
-  skip_all_silent=false
 
   # git repositories
   for file_source in $(dotfiles_find \*.gitrepo); do
@@ -133,12 +132,13 @@ function dotfiles_install() {
   done
 
   # repeat git repositories, skipping existing and suppressing logging so we pickup dotfiles added by the previous step
+  skip_all_silent_prev="$skip_all_silent"
   skip_all_silent=true
   for file_source in $(dotfiles_find \*.gitrepo); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     install_file git $file_source $file_dest
   done
-  skip_all_silent=false
+  skip_all_silent="$skip_all_silent"
 
   # symlinks
   for file_source in $(dotfiles_find \*.symlink); do
@@ -165,28 +165,36 @@ function dotfiles_install() {
   done
 }
 
-function main() {
-  if [ "$1" = "update" ]; then
-    info 'updating dotfiles'
+function install() {
+    dotfiles_install
+    run_installers
+
+    # Update brew and pull git repositories concurrently
     brew_update &
     git_pull_repos
     wait
+
+    # Install/upgrade
     brew_upgrade_formulas
     brew_install_formulas
     mas_upgrade_formulas
     mas_install_formulas
-    run_postinstall
 
+    # Post-install
+    run_postinstall
+    create_localrc
+}
+
+function main() {
+  skip_all_silent=false
+  if [ "$1" = "update" ]; then
+    info 'updating dotfiles'
+    skip_all_silent=true
+    install
     info 'complete! restart your session for environment changes to take effect'
   else
     info 'installing dotfiles'
-    dotfiles_install
-    run_installers
-    brew_install_formulas
-    mas_install_formulas
-    run_postinstall
-    create_localrc
-
+    install
     info 'complete! use dotfiles_update to keep up to date. restart your session for environment changes to take effect'
   fi
 
