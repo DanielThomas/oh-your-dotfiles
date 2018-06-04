@@ -86,6 +86,8 @@ function install_file() {
     elif [ "$skip_all_silent" = "false" ]; then
       success "skipped $file_source"
     fi
+  else
+    link_files $file_type $file_source $file_dest
   fi
 }
 
