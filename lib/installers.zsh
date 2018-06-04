@@ -108,7 +108,7 @@ function run_installers() {
 }
 
 function run_postinstall() {
-    dotfiles_find post-install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
+  dotfiles_find post-install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 }
 
 function create_localrc() {
