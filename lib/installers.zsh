@@ -108,7 +108,6 @@ function run_installers() {
 }
 
 function run_postinstall() {
-    info 'running post-installers'
     dotfiles_find post-install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 }
 
