@@ -34,7 +34,7 @@ function copy_file() {
 }
 
 function open_file() {
-  run "opening $1" "open $1"
+  run "opening $1" "open '$1'"
   success "opened $1"
 }
 
