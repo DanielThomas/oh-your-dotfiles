@@ -167,15 +167,16 @@ function dotfiles_install() {
 }
 
 function install() {
-    dotfiles_install
-    run_installers
-
     # Update brew and pull git repositories concurrently
     brew_update &
     git_pull_repos
     wait
 
-    # Install/upgrade
+    # Run installers
+    dotfiles_install
+    run_installers
+
+    # Install/upgrade formulas
     brew_upgrade_formulas
     brew_install_formulas
     mas_upgrade_formulas
