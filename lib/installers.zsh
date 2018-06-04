@@ -29,6 +29,7 @@ function link_file() {
 }
 
 function copy_file() {
+  mkdir -p $(dirname $2)
   cp $1 $2
   success "copied $1 to $2"
 }
