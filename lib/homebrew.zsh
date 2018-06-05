@@ -71,7 +71,7 @@ function brew_upgrade() {
 function brew_check_and_install() {
   if ! type brew > /dev/null; then
     info "homebrew is not installed, installing"
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  | sed 's/^/         /'
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1 | sed 's/^/         /'
     brew tap caskroom/versions
   fi
 }
