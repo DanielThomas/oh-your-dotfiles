@@ -37,6 +37,7 @@ function brew_install() {
       missing_formulas+="$formula "
     fi
   done
+  missing_formulas=$(echo "$missing_formulas" | xargs)
   if [ ! -z "$missing_formulas" ]; then
     run "installing from $file ($(echo "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" "eval $brew_command install $missing_formulas"
   fi
