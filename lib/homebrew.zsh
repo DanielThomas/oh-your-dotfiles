@@ -43,11 +43,6 @@ function brew_install() {
   fi
 }
 
-function brew_cask_install() {
-  brew_check_and_install
-  brew_installed=$(brew cask ls --versions 2> /dev/null)
-}
-
 function brew_update() {
   if type brew > /dev/null; then
     run 'updating homebrew' 'brew update'
