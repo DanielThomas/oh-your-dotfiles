@@ -1,17 +1,49 @@
 brew_installed=""
 
-function brew_install_formulas() {
-  for file in `dotfiles_find install.homebrew-cask`; do
-    brew_check_and_install
-    formulas=$(cat "$file" | sed -e :a -e '$!N; s/\n/, /; ta')
-    run "installing from $file ($formulas)" 'brew cask install $(cat "'$file'")'
-  done
+function brew_install_upgrade_formulas() {
+  brew_install_formulas
+  brew_upgrade_formulas
+}
 
-  for file in `dotfiles_find install.homebrew`; do
+function brew_install_formulas() {
+  casks=$(dotfiles_find install.homebrew-cask)
+  if [ -n "$casks" ]; then
     brew_check_and_install
-    formulas=$(cat "$file" | sed -e :a -e '$!N; s/\n/, /; ta')
-    run "installing from $file ($formulas)" 'brew install $(cat "'$file'")'
+    brew_installed=$(brew cask ls --versions 2> /dev/null)
+    for file in `dotfiles_find install.homebrew-cask`; do
+      brew_install "$file" cask
+    done
+  fi
+
+  formulas=$(dotfiles_find install.homebrew)
+  if [ -n "$formulas" ]; then
+    brew_check_and_install
+    brew_installed=$(brew ls --versions 2> /dev/null)
+    for file in `dotfiles_find install.homebrew`; do
+      brew_install "$file"
+    done
+  fi
+}
+
+function brew_install() {
+  if [ -z "$2" ]; then
+    brew_command="brew"
+  else
+    brew_command="brew $2"
+  fi
+  for formula in $(cat "$file"); do
+    if ! echo $brew_installed | grep -q $formula; then
+      missing_formulas+=$formula
+    fi
   done
+  if [ ! -z "$missing_formulas" ]; then
+    run "installing from $file ($(cat "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" 'eval '$brew_command' install '$missing_formulas')'
+  fi
+}
+
+function brew_cask_install() {
+  brew_check_and_install
+  brew_installed=$(brew cask ls --versions 2> /dev/null)
 }
 
 function brew_update() {
@@ -22,6 +54,7 @@ function brew_update() {
 }
 
 function brew_upgrade_formulas() {
+  brew_update
   brew_upgrade &
   brew_upgrade cask &
   wait

@@ -1,4 +1,12 @@
-git_clone () {
+git_clone_or_pull() {
+  if [ -d $2 ]; then
+    git_pull $2
+  else
+    git_clone $1 $2
+  fi
+}
+
+git_clone() {
   repo=$(head -n 1 $1)
   dest=$2
   if ! git clone --quiet $repo $dest; then
@@ -18,17 +26,6 @@ git_clone () {
     success "applied $patch"
     popd >> /dev/null
   done
-}
-
-function git_pull_repos() {
-  git_pull "$ZSHRC" &
-  for file in $(dotfiles_find \*.gitrepo); do
-    repo="$HOME/.`basename \"${file%.*}\"`"
-    if [ -d "$repo" ]; then
-      git_pull "$repo" &
-    fi
-  done
-  wait
 }
 
 function git_pull() {

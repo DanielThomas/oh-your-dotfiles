@@ -15,7 +15,7 @@ function link_files() {
       copy_file $2 $3
       ;;
     git )
-      git_clone $2 $3
+      git_clone_or_pull $2 $3
       ;;
     * )
       fail "Unknown link type: $1"
@@ -48,7 +48,7 @@ function install_file() {
     backup=false
     skip=false
 
-    if [ "$overwrite_all" = "false" ] && [ "$backup_all" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ]; then
+    if [ "$overwrite_all" = "false" ] && [ "$backup_all" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ] && [ "$force_all" = "false" ]; then
       user "File already exists: `basename $file_dest`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
       read -r action
 
@@ -82,7 +82,7 @@ function install_file() {
       link_files $file_type $file_source $file_dest
     fi
 
-    if [ "$skip" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ]; then
+    if [[ "$force_all" = "true" ]] || [[ "$skip" = "false" && "$skip_all" = "false" && "$skip_all_silent" = "false" ]]; then
       link_files $file_type $file_source $file_dest
     elif [ "$skip_all_silent" = "false" ]; then
       success "skipped $file_source"
@@ -93,6 +93,9 @@ function install_file() {
 }
 
 function run_installers() {
+  brew_install_upgrade_formulas
+  mas_install_upgrade_formulas
+
   info 'running installers'
   dotfiles_find install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 
@@ -125,21 +128,30 @@ function dotfiles_install() {
   overwrite_all=false
   backup_all=false
   skip_all=false
+  force_all=true
 
   # git repositories
+  force_all=true
   for file_source in $(dotfiles_find \*.gitrepo); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     install_file git $file_source $file_dest
   done
+  force_all=false
 
-  # repeat git repositories, skipping existing and suppressing logging so we pickup dotfiles added by the previous step
-  skip_all_silent_prev="$skip_all_silent"
-  skip_all_silent=true
-  for file_source in $(dotfiles_find \*.gitrepo); do
-    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    install_file git $file_source $file_dest
+  # dotfiles can be in nested gitrepo files, so we continue until no destinations remain
+  while true; do
+    had_missing=false
+    for file_source in $(dotfiles_find \*.gitrepo); do
+      file_dest="$HOME/.`basename \"${file_source%.*}\"`"
+      if [ ! -d "$file_dest" ]; then
+        had_missing=true
+        install_file git $file_source $file_dest
+      fi
+    done
+    if [ "$had_missing" = "false" ]; then
+      break
+    fi
   done
-  skip_all_silent="$skip_all_silent"
 
   # symlinks
   for file_source in $(dotfiles_find \*.symlink); do
@@ -167,22 +179,8 @@ function dotfiles_install() {
 }
 
 function install() {
-    # Update brew and pull git repositories concurrently
-    brew_update &
-    git_pull_repos
-    wait
-
-    # Run installers
     dotfiles_install
     run_installers
-
-    # Install/upgrade formulas
-    brew_upgrade_formulas
-    brew_install_formulas
-    mas_upgrade_formulas
-    mas_install_formulas
-
-    # Post-install
     run_postinstall
     create_localrc
 }

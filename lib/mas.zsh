@@ -1,5 +1,10 @@
 mas_installed=""
 
+function mas_install_upgrade_formulas() {
+  mas_install_formulas
+  mas_upgrade_formulas
+}
+
 function mas_install_formulas() {
   mas_files=`dotfiles_find install.mas`
   if [ -n "$mas_files" ]; then
