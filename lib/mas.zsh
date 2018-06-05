@@ -1,6 +1,7 @@
 mas_installed=""
 
 function mas_install_upgrade_formulas() {
+  mas_check_and_install
   mas_install_formulas
   mas_upgrade_formulas
 }
@@ -27,7 +28,6 @@ function mas_upgrade_formulas() {
 }
 
 function mas_install() {
-  mas_check_and_install
   id="${1%% *}"
   name="${1#* }"
   if ! echo $mas_installed | grep -q "^$id"; then
@@ -43,12 +43,10 @@ function mas_check_and_install() {
   if ! type mas > /dev/null; then
     info "mas is not installed, installing"
     brew_check_and_install
-    brew_install mas
+    brew install mas
     user "enter Apple id"
     read -r appleid
-    user "enter Apple password"
-    read -rs applepwd
-    if mas signin $appleid $applepwd > /dev/null 2>&1; then
+    if mas signin $appleid > /dev/null 2>&1; then
       success "signed into App Store as $appleid"
     else
       fail "failed to sign in to App Store as $appleid"
