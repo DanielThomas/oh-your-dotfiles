@@ -37,7 +37,7 @@ function brew_install() {
     fi
   done
   if [ ! -z "$missing_formulas" ]; then
-    run "installing from $file ($(cat "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" 'eval '$brew_command' install '$missing_formulas')'
+    run "installing from $file ($(echo "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" "eval $brew_command install $missing_formulas"
   fi
 }
 
@@ -74,7 +74,7 @@ function brew_upgrade() {
 function brew_check_and_install() {
   if ! type brew > /dev/null; then
     info "homebrew is not installed, installing"
-    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"  | sed 's/^/         /'
     brew tap caskroom/versions
   fi
 }
