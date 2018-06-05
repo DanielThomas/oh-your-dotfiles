@@ -18,7 +18,7 @@ See https://github.com/DanielThomas/dotfiles for an example of a dotfiles reposi
 - `dotfiles` - list dotfiles locations
 - `dotfiles_find` - find files within dotfiles locations, for example `dotfiles_find \*.gitrepo`
 - `dotfiles_install` - run dotfiles installers
-- `dotfiles_update` - update dotfiles installed files
+- `dotfiles_update` - update dotfiles installed files. Equivalent to running `dotfiles_install` and choosing `S` to skip existing
 
 ## How it works ##
 
