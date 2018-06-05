@@ -31,9 +31,10 @@ function brew_install() {
   else
     brew_command="brew $2"
   fi
+  missing_formulas=""
   for formula in $(cat "$file"); do
     if ! echo $brew_installed | grep -q $formula; then
-      missing_formulas+=$formula
+      missing_formulas+="$formula "
     fi
   done
   if [ ! -z "$missing_formulas" ]; then
