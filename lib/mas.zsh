@@ -44,12 +44,31 @@ function mas_check_and_install() {
     info "mas is not installed, installing"
     brew_check_and_install
     brew install mas
-    user "enter Apple id"
-    read -r appleid
-    if mas signin $appleid > /dev/null 2>&1; then
-      success "signed into App Store as $appleid"
-    else
-      fail "failed to sign in to App Store as $appleid"
-    fi
+    login_to_Mac_App_Store
   fi
+}
+
+function login_to_Mac_App_Store () {
+  #	Attempt at workaround for High Sierra error that prevents logging into Mac App Store
+  #		See Mike Ratcliffe, https://github.com/mas-cli/mas/issues/107#issuecomment-335514316
+  # Test if signed in. If not, launch MAS and sign in.
+
+  until (mas account > /dev/null); # If signed in, drop to outer "done"
+  do
+    #	If here, not logged in
+	  echo -e "You are not yet logged into the Mac App Store."
+	  echo -e "I will launch the Mac App Store now."
+	  echo -e "\nPlease log in to the Mac App Store..."
+	  open -a "/Applications/App Store.app"
+
+    # until loop waits patiently until scriptrunner signs into Mac App Store
+	  until (mas account > /dev/null);
+	  do
+		  sleep 3
+    	  echo -e "… zzz …."
+  	done	
+  done
+  echo -e "You are signed into the Mac App Store."
+  signed_in_user=$(mas account)
+  echo -e "MAS user name: $signed_in_user"
 }
