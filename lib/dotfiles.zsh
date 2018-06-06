@@ -12,7 +12,7 @@ function realpath() {
   echo "$REALPATH"
 }
 
-local defaults=$(realpath "${0:a:h}/../defaults")
+defaults=$(realpath "${0:a:h}/../defaults")
 
 function dotfiles_install() {
   $ZSHRC/lib/installers.zsh
@@ -27,9 +27,11 @@ function dotfiles_reload() {
 }
 
 function dotfiles_find() {
-  find $defaults $(dotfiles) -name "$1"
+  find $(dotfiles) -name "$1"
 }
 
 function dotfiles() {
-  find "$HOME" -maxdepth 1 -type d -name '.*dotfiles*'
+  files=("$defaults")
+  files+=($(find "$HOME" -maxdepth 1 -type d -name '.*dotfiles*'  -not -name '.oh-your-dotfiles'))
+  echo "${files[@]}"
 }

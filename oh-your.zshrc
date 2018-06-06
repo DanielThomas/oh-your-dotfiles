@@ -48,13 +48,11 @@ DISABLE_AUTO_UPDATE="true"
 ZSH_THEME="agnoster"
 
 # configure plugins
-if [ ! -z "$(dotfiles)" ]; then
-  plugins=("${(@f)$(
-  find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
+plugins=("${(@f)$(
+find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
 
-  find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
-  )}")
-fi
+find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
+)}")
 
 for file in ${(M)config_files:#*/oh-my-zsh.zsh}
 do
