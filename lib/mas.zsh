@@ -1,7 +1,6 @@
 mas_installed=""
 
 function mas_install_upgrade_formulas() {
-  mas_check_and_install
   mas_install_formulas
   mas_upgrade_formulas
 }
@@ -9,6 +8,7 @@ function mas_install_upgrade_formulas() {
 function mas_install_formulas() {
   mas_files=`dotfiles_find install.mas`
   if [ -n "$mas_files" ]; then
+    mas_check_and_install
     mas_installed=$(mas list 2> /dev/null)
     for file in $mas_files; do
       while read formula; do
