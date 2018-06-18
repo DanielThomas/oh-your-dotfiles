@@ -134,8 +134,9 @@ function dotfiles_install() {
   force_all=true
   for file_source in $(dotfiles_find \*.gitrepo); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    install_file git $file_source $file_dest
+    install_file git $file_source $file_dest &
   done
+  wait
   force_all=false
 
   # dotfiles can be in nested gitrepo files, so we continue until no destinations remain
@@ -145,8 +146,9 @@ function dotfiles_install() {
       file_dest="$HOME/.`basename \"${file_source%.*}\"`"
       if [ ! -d "$file_dest" ]; then
         had_missing=true
-        install_file git $file_source $file_dest
+        install_file git $file_source $file_dest &
       fi
+      wait
     done
     if [ "$had_missing" = "false" ]; then
       break
