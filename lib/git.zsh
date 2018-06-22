@@ -31,7 +31,7 @@ git_clone() {
 function git_pull() {
   pushd $1 > /dev/null
   if ! git pull origin master --rebase --quiet; then
-    fail "could not update $repo"
+    fail "could not update $1"
   fi
   success "updated $1"
   popd >> /dev/null
