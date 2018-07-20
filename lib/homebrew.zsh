@@ -72,6 +72,16 @@ function brew_check_and_install() {
   if ! type brew > /dev/null; then
     info "homebrew is not installed, installing"
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 2>&1 | sed 's/^/         /'
-    brew tap caskroom/versions
   fi
+  brew_taps
 }
+
+function brew_taps() {
+    for tapfile in `dotfiles_find install.homebrew-tap`; do
+      while read -r LINE || [[ -n "$LINE" ]]; do
+        args=($(echo $LINE))
+        brew tap ${args[@]}
+      done < $tapfile
+    done
+}
+
