@@ -80,7 +80,7 @@ function brew_taps() {
     for tapfile in `dotfiles_find install.homebrew-tap`; do
       while read -r LINE || [[ -n "$LINE" ]]; do
         args=($(echo $LINE))
-        brew tap ${args[@]}
+        HOMEBREW_NO_AUTO_UPDATE=1 brew tap ${args[@]}
       done < $tapfile
     done
 }
