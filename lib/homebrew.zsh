@@ -1,6 +1,7 @@
 brew_installed=""
 
 function brew_install_upgrade_formulas() {
+  export HOMEBREW_INSTALL_CLEANUP=true
   brew_install_formulas
   brew_upgrade_formulas
 }
@@ -63,7 +64,6 @@ function brew_upgrade() {
     outdated=$(eval $brew outdated | sed -e :a -e '$!N; s/\n/, /; ta')
     if [ -n "$outdated" ]; then
       run "upgrading $brew ($outdated)" "$brew upgrade"
-      run "cleaning up homebrew $1" "$brew cleanup"
     fi
   fi
 }
