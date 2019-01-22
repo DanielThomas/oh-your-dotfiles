@@ -4,7 +4,7 @@ Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holm
 
 ## Install ##
 
-1. Clone this repository to `$HOME/.oh-your-zshrc` and symlink `oh-your.zshrc` to `$HOME/.zshrc`.
+1. Clone this repository to `$HOME/.oh-your-dotfiles` and symlink `oh-your.zshrc` to `$HOME/.zshrc`.
 2. ...
 
 ## Features ##
