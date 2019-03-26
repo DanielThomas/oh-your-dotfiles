@@ -49,7 +49,7 @@ ZSH_THEME="agnoster"
 
 # configure plugins
 plugins=("${(@f)$(
-find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \;
+find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \; | awk -v zsh=${ZSH} '{print zsh"/plugins/"$1}' | xargs ls -d 2>/dev/null | xargs -n 1 basename | sort | uniq
 
 find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
 )}")
