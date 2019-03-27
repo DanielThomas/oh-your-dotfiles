@@ -49,9 +49,9 @@ ZSH_THEME="agnoster"
 
 # configure plugins
 plugins=("${(@f)$(
-find $(dotfiles) -not -name '.git' -d 1 -type d -exec basename {} \; | awk -v zsh=${ZSH} '{print zsh"/plugins/"$1}' | xargs ls -d 2>/dev/null | xargs -n 1 basename | sort | uniq
+find $(dotfiles) -maxdepth 1 -not -name '.git' -type d -exec basename {} \; | awk -v zsh=${ZSH} '{print zsh"/plugins/"$1}' | xargs ls -d 2>/dev/null | xargs -n 1 basename | sort | uniq
 
-find $(dotfiles) -name oh-my-zsh.plugins -d 2 -exec cat {} \;
+find $(dotfiles) -maxdepth 2 -name oh-my-zsh.plugins -exec cat {} \;
 )}")
 
 for file in ${(M)config_files:#*/oh-my-zsh.zsh}
