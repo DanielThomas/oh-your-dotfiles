@@ -4,12 +4,34 @@ Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holm
 
 ## Install ##
 
-1. Clone this repository to `$HOME/.oh-your-dotfiles` and symlink `oh-your.zshrc` to `$HOME/.zshrc`.
-2. ...
+The framework is only currently tested on macOS.
+
+1. Clone this repository to `~/.oh-your-dotfiles`
+```
+git clone https://github.com/DanielThomas/oh-your-dotfiles.git ~/.oh-your-dotfiles
+```
+2. Link the zshrc file to `~/.zshrc`
+```
+ln -s ~/.oh-your-dotfiles/oh-your.zshrc ~/.zshrc
+```
+3. Change your default shell to `zsh`
+```
+chsh -s /bin/zsh
+```
+4. Start a new terminal session and run `dotfiles_install`
+
+If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them.
+
+### Post Install ###
+
+After installation, optionally switch to the Homebrew managed `zsh`:
+
+```
+sudo sh -c "echo /usr/local/bin/zsh >> /etc/shells"
+chsh -s /usr/local/bin/zsh
+```
 
 ## Features ##
-
-...
 
 See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
 
