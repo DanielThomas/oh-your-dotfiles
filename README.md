@@ -18,9 +18,7 @@ ln -s ~/.oh-your-dotfiles/oh-your.zshrc ~/.zshrc
 ```
 chsh -s /bin/zsh
 ```
-4. Start a new terminal session and run `dotfiles_install`
-
-If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them.
+4. Start a new terminal session and run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them.
 
 ### Post Install ###
 
