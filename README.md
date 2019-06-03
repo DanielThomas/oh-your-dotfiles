@@ -29,7 +29,7 @@ sudo sh -c "echo /usr/local/bin/zsh >> /etc/shells"
 chsh -s /usr/local/bin/zsh
 ```
 
-You're good to go! Create yourself a dotfiles repositor using the conventions below. See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
+You're good to go! Create yourself a dotfiles repository using the conventions below. See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
 
 ## Built-in Functions ##
 
