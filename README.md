@@ -1,3 +1,5 @@
+*You got your Oh My Zsh in my dotfiles!*
+
 The flexibility of dotfiles meets the power of [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh) and [Homebrew](https://brew.sh/).
 
 Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holman/dotfiles).
