@@ -73,6 +73,7 @@ The following extensions will cause files to be created in your home directory:
 
 - `*.symlink`: Automaticlly symlinked into your `$HOME` as a dot file during bootstrap. For example, `myfile.symlink` will be linked as `$HOME/.myfile`
 - `*.gitrepo`: Contains a URL to a Git repository to be cloned as a dotfile. For example `myrepo.gitrepo` will be cloned to `$HOME/.myrepo`
+- `*.gitconfig`: These file are `include.path`ed into `$HOME/.gitconfig`. Additional local configuration can be added to `$HOME/user.gitconfig`.
 - `*.themegitrepo`: Contains a URL to a Git repository to be cloned as a custom zsh theme. For example `mytheme.gitrepo` will be cloned to `$HOME/.oh-my-zsh/custom/themes/mytheme`
 - `*.gitpatch`: Name `repo-<number>.gitpatch` to apply custom patches to a `gitrepo` repository
 - `*.otf`, `*.ttf`, `*.ttc`: Fonts are copied to `~/Library/Fonts` during bootstrap

@@ -157,6 +157,13 @@ function dotfiles_install() {
     install_file copy $file_source $file_dest
   done
 
+  # gitconfig
+  echo "[include]" > ~/.gitconfig
+  for file_source in $(dotfiles_find \*.gitconfig); do
+    echo "  path = $file_source" >> ~/.gitconfig
+  done
+  echo "  path = ~/user.gitconfig" >> ~/.gitconfig
+
   # fonts
   for file_source in $(dotfiles_find \*.otf); do
     file_dest="$HOME/Library/Fonts/$(basename $file_source)"
