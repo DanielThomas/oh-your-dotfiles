@@ -77,6 +77,7 @@ The following extensions will cause files to be created in your home directory:
 - `*.gitpatch`: Name `repo-<number>.gitpatch` to apply custom patches to a `gitrepo` repository
 - `*.otf`, `*.ttf`, `*.ttc`: Fonts are copied to `~/Library/Fonts` during bootstrap
 - `*.plist`: Preference lists are copied to `~/Library/Preferences` during bootstrap
+- `*.files`: The files under these directories are copied to `$HOME`.
 - `*.launchagent`: Files are copied to `~/Library/LaunchAgents` during bootstrap
 
 ### Installers ###
