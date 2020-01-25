@@ -73,7 +73,7 @@ The following extensions will cause files to be created in your home directory:
 
 ### Installers ###
 
-Installation steps during bootstrap can be handled in three ways:
+Installation steps during bootstrap can be handled in several ways:
 
 - `install.sh`: An installation shellscript
 - `install.homebrew`: A list of Homebrew formulas to install
