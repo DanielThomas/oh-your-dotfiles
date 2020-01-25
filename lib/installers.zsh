@@ -166,7 +166,13 @@ function dotfiles_install() {
   # symlinks
   for file_source in $(dotfiles_find \*.symlink); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    install_file link $file_source $file_dest
+    if [ -L $file_dest ]; then
+      if [ "$(readlink "$file_dest")" != "$file_source" ]; then
+        install_file link $file_source $file_dest
+      fi
+    else
+      install_file link $file_source $file_dest
+    fi
   done
 
   # preferences
