@@ -51,7 +51,7 @@ ZSH_THEME="agnoster"
 plugins=("${(@f)$(
 find $(dotfiles) -maxdepth 1 -not -name '.git' -type d -exec basename {} \; | awk -v zsh=${ZSH} '{print zsh"/plugins/"$1}' | xargs ls -d 2>/dev/null | xargs -n 1 basename | sort | uniq
 
-find $(dotfiles) -maxdepth 2 -name oh-my-zsh.plugins -exec cat {} \;
+find $(dotfiles) -maxdepth 2 -name oh-my-zsh.plugins -exec cat {} \; -exec echo \;
 )}")
 
 for file in ${(M)config_files:#*/oh-my-zsh.zsh}
