@@ -53,17 +53,17 @@ function brew_update() {
 
 function brew_upgrade_formulas() {
   brew_update
-  brew_upgrade &
+  brew_upgrade formula &
   brew_upgrade cask &
   wait
 }
 
 function brew_upgrade() {
   if type brew > /dev/null; then
-    brew="brew $1"
-    outdated=$(eval $brew outdated | sed -e :a -e '$!N; s/\n/, /; ta')
+    type="$1"
+    outdated=$(brew outdated --${type} | sed -e :a -e '$!N; s/\n/, /; ta')
     if [ -n "$outdated" ]; then
-      run "upgrading $brew ($outdated)" "$brew upgrade"
+      run "upgrading brew $type ($outdated)" "$brew upgrade"
     fi
   fi
 }
