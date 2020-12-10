@@ -194,11 +194,7 @@ function install() {
   fi
   dotfiles_install
   for arch in $(install_arch_list); do
-    if [ "$arch" = "$(uname -m)" ]; then
-      info "running installers"
-    else
-      info "running installers for $arch"
-    fi
+    info "running installers for $arch"
     arch -arch "$arch" "$libdir/install-arch.zsh"
   done
   create_localrc
