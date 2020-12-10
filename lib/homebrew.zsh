@@ -92,13 +92,10 @@ function brew_check_and_install() {
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
       info "homebrew is not installed in $prefix, installing to custom prefix"
-      info "creating directory $prefix"
-      sudo mkdir -p "$prefix"
+      run "creating directory $prefix" "sudo mkdir -p {$prefix}"
       owner="$(whoami):$(id -g -n)"
-      info "changing ownership of $prefix to $owner"
-      sudo chown -R "$owner" "$prefix"
-      info "downloading homebrew and extracting to $prefix"
-      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$prefix"
+      run "changing ownership of $prefix to $owner" "chown -R ${owner} ${prefix}"
+      run "downloading homebrew and extracting to $prefix" "curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ${prefix}"
     fi
   fi
   brew_taps
