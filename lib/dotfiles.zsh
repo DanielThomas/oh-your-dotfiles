@@ -29,7 +29,7 @@ function dotfiles_reload() {
 function dotfiles_find() {
   local arch=$(uname -m)
   local arch_native="$arch"
-  if sysctl -n machdep.cpu.brand_string | grep "Apple"; then
+  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
     arch_native="arm64"
   fi
   if [ "$arch_native" = "$arch" ]; then
@@ -42,7 +42,7 @@ function dotfiles_find() {
 function dotfiles_find_installer() {
   local arch=$(uname -m)
   local arch_native="$arch"
-  if sysctl -n machdep.cpu.brand_string | grep "Apple"; then
+  if sysctl -n machdep.cpu.brand_string | grep "Apple"> /dev/null; then
     arch_native="arm64"
   fi
   if [ "$arch_native" = "$arch" ]; then

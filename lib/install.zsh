@@ -179,14 +179,14 @@ function dotfiles_install() {
 }
 
 function install_arch_list() {
-  if sysctl -n machdep.cpu.brand_string | grep "Apple"; then
+  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
     echo "arm64"
   fi
   echo "x86_64"
 }
 
 function install() {
-  if sysctl -n machdep.cpu.brand_string | grep "Apple"; then
+  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
     if [ $(uname -m) != "arm64" ]; then
       echo "This command must be run on an arm64 terminal on Apple Silicon"
       return 1
