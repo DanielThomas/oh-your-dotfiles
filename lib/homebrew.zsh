@@ -96,8 +96,9 @@ function brew_check_and_install() {
       sudo mkdir -p "$prefix"
       owner="$(whoami):$(id -g -n)"
       info "changing ownership of $prefix to $owner"
-      sudo chown -R "$prefix" "$owner"
-      mkdir "$prefix" && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$prefix"
+      sudo chown -R "$owner" "$prefix"
+      info "downloading homebrew and extracting to $prefix"
+      curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$prefix"
     fi
   fi
   brew_taps
