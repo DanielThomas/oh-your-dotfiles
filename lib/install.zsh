@@ -180,7 +180,7 @@ function dotfiles_install() {
 
 function install_arch_list() {
   if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
-    echo "arm64"
+    echo "arm64e"
   fi
   echo "x86_64"
 }
