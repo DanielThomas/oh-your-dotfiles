@@ -96,7 +96,7 @@ function brew_check_and_install() {
       sudo mkdir -p "$prefix"
       owner="$(whoami):$(id -g -n)"
       info "changing ownership of $prefix to $owner"
-      sudo chown -R "$owner" "$prefix"
+      sudo chown -R "$prefix" "$owner"
       mkdir "$prefix" && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C "$prefix"
     fi
   fi
@@ -107,7 +107,7 @@ function brew_taps() {
   for tapfile in `dotfiles_find_installer install.homebrew-tap`; do
     while read -r LINE || [[ -n "$LINE" ]]; do
       args=($(echo $LINE))
-      HOMEBREW_NO_AUTO_UPDATE=1 brew tap ${args[@]}
+      HOMEBREW_NO_AUTO_UPDATE=1 brew_run tap ${args[@]}
     done < $tapfile
   done
 }
