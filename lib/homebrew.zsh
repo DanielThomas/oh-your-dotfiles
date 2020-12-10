@@ -24,6 +24,7 @@ function brew_prefix() {
 }
 
 function brew_install_upgrade_formulas() {
+  brew_check_and_install
   brew_install_formulas
   brew_upgrade_formulas
 }
@@ -31,7 +32,6 @@ function brew_install_upgrade_formulas() {
 function brew_install_formulas() {
   casks=$(dotfiles_find_installer install.homebrew-cask)
   if [ -n "$casks" ]; then
-    brew_check_and_install
     brew_installed=$(brew_run ls --cask --versions 2> /dev/null)
     for file in `dotfiles_find_installer install.homebrew-cask`; do
       brew_install cask "$file"
@@ -40,7 +40,6 @@ function brew_install_formulas() {
 
   formulas=$(dotfiles_find_installer install.homebrew)
   if [ -n "$formulas" ]; then
-    brew_check_and_install
     brew_installed=$(brew_run ls --versions 2> /dev/null)
     for file in `dotfiles_find_installer install.homebrew`; do
       brew_install formula "$file"
