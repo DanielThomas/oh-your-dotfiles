@@ -20,7 +20,7 @@ ln -s ~/.oh-your-dotfiles/oh-your.zshrc ~/.zshrc
 ```
 chsh -s /bin/zsh
 ```
-4. Start a new terminal session and run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them.
+4. Start a new terminal session and run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them (On Apple Silicon run installations/updates only under the a native Terminal)
 
 ### Post Install ###
 
@@ -49,6 +49,14 @@ Dotfiles sources are found using the pattern `$HOME/.*dotfiles*`.
 The files within are processed automatically by `.zshrc` or the installation process depending on their extension. 
 
 Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
+
+### Architecture ###
+
+The file conventions support an architecture suffix, for instance `path.zsh.x86_64` or `path.zsh.arm64` which will make the configuration apply conditionally to that architecture.
+
+Installers are run regardless of the prevailing architecture if the machine supports that architecture (i.e. `x86_64` on `arm64` via Rosetta 2) using `arch` to force the architecture. The `brew` command is also shimmed with a function to use the architecture specific location, `/usr/local` for `x86_64` and `/opt/homebrew` for `arm64` based on the prevailing architecture, run `brew` with `arch -x86_64 brew` in an `arm64` terminal to manually install Intel formulas/casks.
+
+Installer files without a suffix are assumed to be universal and are run using the native architecture for the machine. For files that are strictly compatible with a native architecture, add `-native`, for instance `x86_64-native` to indicate that it should be ignored even with `x86_64` translation.
 
 ### Environment ###
 

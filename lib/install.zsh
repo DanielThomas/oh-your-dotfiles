@@ -92,30 +92,6 @@ function install_file() {
   fi
 }
 
-function run_installers() {
-  brew_install_upgrade_formulas
-  mas_install_upgrade_formulas
-
-  info 'running installers'
-  dotfiles_find install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
-
-  info 'opening files'
-  for file_source in $(dotfiles_find install.open); do
-    OLD_IFS=$IFS
-    IFS=$'\n'
-    basedir="$(dirname $file_source)"
-    for file in `cat $file_source`; do
-      canonical_file="$basedir/$file"
-      open_file "$canonical_file"
-    done
-    IFS=$OLD_IFS
-  done
-}
-
-function run_postinstall() {
-  dotfiles_find post-install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
-}
-
 function create_localrc() {
   LOCALRC=$HOME/.localrc
   if [ ! -f "$LOCALRC" ]; then
@@ -202,11 +178,28 @@ function dotfiles_install() {
   done
 }
 
+function install_arch_list() {
+  if [ "$(sysctl -n machdep.cpu.vendor)" = "Apple" ]; then
+    echo "arm64"
+  fi
+  echo "x86_64"
+}
+
 function install() {
-    dotfiles_install
-    run_installers
-    run_postinstall
-    create_localrc
+  if [[ $(sysctl -n machdep.cpu.vendor) == "Apple" && $(uname -m) != "arm64" ]]; then
+    echo "This command must be run on an arm64 terminal on Apple Silicon"
+    return 1
+  fi
+  dotfiles_install
+  for arch in $(install_arch_list); do
+    if [ "$arch" = "$(uname -m)" ]; then
+      info "running installers"
+    else
+      info "running installers for $arch"
+    fi
+    arch -arch "$arch" "$libdir/install-arch.zsh"
+  done
+  create_localrc
 }
 
 function main() {

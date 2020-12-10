@@ -15,11 +15,11 @@ function realpath() {
 defaults=$(realpath "${0:a:h}/../defaults")
 
 function dotfiles_install() {
-  $ZSHRC/lib/installers.zsh
+  $ZSHRC/lib/install.zsh
 }
 
 function dotfiles_update() {
-  $ZSHRC/lib/installers.zsh update
+  $ZSHRC/lib/install.zsh update
 }
 
 function dotfiles_reload() {
@@ -27,7 +27,30 @@ function dotfiles_reload() {
 }
 
 function dotfiles_find() {
-  find $(dotfiles) -name "$1"
+  local arch=$(uname -m)
+  local arch_native="$arch"
+  if [ "$(sysctl -n machdep.cpu.vendor)" = "Apple" ]; then
+    arch_native="arm64"
+  fi
+  if [ "$arch_native" = "$arch" ]; then
+    find $(dotfiles) -name "$1" -o -name "$1.$(arch)" -o -name "$1.$(arch)-native"
+  else
+    find $(dotfiles) -name "$1" -o -name "$1.$(arch)"
+  fi
+}
+
+function dotfiles_find_installer() {
+  local arch=$(uname -m)
+  local arch_native="$arch"
+  if [ "$(sysctl -n machdep.cpu.vendor)" = "Apple" ]; then
+    arch_native="arm64"
+  fi
+  if [ "$arch_native" = "$arch" ]; then
+    # only return universal installers for the native architecture to avoid double-executing the installers
+    find $(dotfiles) -name "$1" -o -name "$1.$(arch)" -o -name "$1.$(arch)-native"
+  else
+    find $(dotfiles) -name "$1.$(arch)"
+  fi
 }
 
 function dotfiles() {
