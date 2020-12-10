@@ -188,7 +188,7 @@ function install_arch_list() {
 function install() {
   if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
     if [ $(uname -m) != "arm64" ]; then
-      fail "This command must be run on an arm64 terminal on Apple Silicon"
+      fail "this command must be run on an arm64 terminal on Apple Silicon"
     fi
     if [[ ! -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]]; then
       run 'installing Rosetta' "/usr/sbin/softwareupdate --install-rosetta --agree-to-license"
