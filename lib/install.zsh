@@ -190,6 +190,9 @@ function install() {
     if [ $(uname -m) != "arm64" ]; then
       fail "This command must be run on an arm64 terminal on Apple Silicon"
     fi
+    if [[ ! -f "/Library/Apple/System/Library/LaunchDaemons/com.apple.oahd.plist" ]]; then
+      run 'installing Rosetta' "/usr/sbin/softwareupdate --install-rosetta --agree-to-license"
+    fi
   fi
   dotfiles_install
   for arch in $(install_arch_list); do
