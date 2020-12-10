@@ -59,7 +59,7 @@ function brew_install() {
   done
   missing_formulas=$(echo "$missing_formulas" | xargs)
   if [ ! -z "$missing_formulas" ]; then
-    run "installing casks from $file ($(echo "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" "brew_run install --${type} $missing_formulas"
+    run "installing ${type}s from $file ($(echo "$missing_formulas" | sed -e :a -e '$!N; s/\n/, /; ta'))" "brew_run install --${type} $missing_formulas"
   fi
 }
 
