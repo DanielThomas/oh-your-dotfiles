@@ -87,7 +87,7 @@ function brew_upgrade() {
 function brew_check_and_install() {
   if [ ! -f $(brew_command) ]; then
     prefix=$(brew_prefix)
-    if [ "$prefix" == "/usr/local" ]; then
+    if [ "$prefix" = "/usr/local" ]; then
       info "homebrew is not installed in $prefix, running standard installer"
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
