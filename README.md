@@ -16,7 +16,7 @@ git clone https://github.com/DanielThomas/oh-your-dotfiles.git ~/.oh-your-dotfil
 ```
 ln -s ~/.oh-your-dotfiles/oh-your.zshrc ~/.zshrc
 ```
-3. Change your default shell to `zsh`
+3. If you're not on a macOS release where it's the default, change your default shell to `zsh`
 ```
 chsh -s /bin/zsh
 ```
