@@ -52,7 +52,7 @@ function brew_install() {
   file="$2"
   missing_formulas=""
   for formula in $(cat "$file"); do
-    if ! echo $brew_installed | grep -q $formula; then
+    if ! echo $brew_installed | grep -q "$formula "; then
       missing_formulas+="$formula "
     fi
   done
