@@ -77,7 +77,7 @@ function brew_upgrade_formulas() {
 
 function brew_upgrade() {
   type="$1"
-  outdated=$(brew outdated --${type} | sed -e :a -e '$!N; s/\n/, /; ta')
+  outdated=$(brew_run outdated --${type} | sed -e :a -e '$!N; s/\n/, /; ta')
   if [ -n "$outdated" ]; then
     run "upgrading brew $type ($outdated)" "brew upgrade --${type}"
   fi
