@@ -19,9 +19,16 @@ function realpath() {
   echo "$REALPATH"
 }
 
-# oh-your-zshrc
+# oh-your-dotfiles
 export ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
 source "$ZSHRC/lib/dotfiles.zsh"
+
+# preserve the original path so we can restore it on reload
+if [ -z "$ZSHRC_PATH" ]; then
+  ZSHRC_PATH="$PATH"
+else
+  PATH="$ZSHRC_PATH"
+fi
 
 # find all zsh files
 typeset -U config_files
