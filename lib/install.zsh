@@ -24,13 +24,14 @@ function link_files() {
 }
 
 function link_file() {
-  ln -s -f $1 $2
+  mkdir -p $(dirname $2)
+  run "linking $1 to $2" "ln -s -f $1 $2"
   success "linked $1 to $2"
 }
 
 function copy_file() {
   mkdir -p $(dirname $2)
-  cp $1 $2
+  run "copying $1 to $2" "cp $1 $2"
   success "copied $1 to $2"
 }
 
@@ -40,9 +41,9 @@ function open_file() {
 }
 
 function install_file() {
-  file_type=$1
-  file_source=$2
-  file_dest=$3
+  local file_type=$1
+  local file_source=$2
+  local file_dest=$3
   if [ -f $file_dest ] || [ -d $file_dest ]; then
     overwrite=false
     backup=false
@@ -142,12 +143,25 @@ function dotfiles_install() {
   # symlinks
   for file_source in $(dotfiles_find \*.symlink); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    if [ -L $file_dest ]; then
-      if [ "$(readlink "$file_dest")" != "$file_source" ]; then
+    if [ -d $file_source ]; then
+      for directory_file_source in $(find "$file_source" -type f); do
+        directory_file_dest=${file_dest}${directory_file_source#"$file_source"}
+        if [ -L $directory_file_dest ]; then
+          if [ "$(readlink "$directory_file_dest")" != "$directory_file_source" ]; then
+            install_file link $directory_file_source $directory_file_dest
+          fi
+        else
+            install_file link $directory_file_source $directory_file_dest
+        fi
+      done
+    else
+      if [ -L $file_dest ]; then
+        if [ "$(readlink "$file_dest")" != "$file_source" ]; then
+          install_file link $file_source $file_dest
+        fi
+      else
         install_file link $file_source $file_dest
       fi
-    else
-      install_file link $file_source $file_dest
     fi
   done
 

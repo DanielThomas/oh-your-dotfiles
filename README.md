@@ -71,7 +71,7 @@ These files set your shell's environment:
 
 The following extensions will cause files to be created in your home directory:
 
-- `*.symlink`: Automaticlly symlinked into your `$HOME` as a dot file during bootstrap. For example, `myfile.symlink` will be linked as `$HOME/.myfile`
+- `*.symlink`: Automaticlly symlinked into your `$HOME` as a dot file during bootstrap. For example, a file `myfile.symlink` will be linked as `$HOME/.myfile`. If a directory the files within will be symlinked relatively, for instance `config.symlink/mytool/myconfig` will be linked as `$HOME/.config/mytool/myconfig`
 - `*.gitrepo`: Contains a URL to a Git repository to be cloned as a dotfile. For example `myrepo.gitrepo` will be cloned to `$HOME/.myrepo`
 - `*.themegitrepo`: Contains a URL to a Git repository to be cloned as a custom zsh theme. For example `mytheme.gitrepo` will be cloned to `$HOME/.oh-my-zsh/custom/themes/mytheme`
 - `*.gitpatch`: Name `repo-<number>.gitpatch` to apply custom patches to a `gitrepo` repository
