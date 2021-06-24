@@ -8,14 +8,14 @@ git_clone_or_pull() {
 
 git_clone() {
   fetch=$(head -n 1 $1)
-  push=$(tail -n 2 $1)
+  push=$(head -2 $1| tail -1)
   dest=$2
 
   if ! git -C "$dest" clone --quiet $fetch $dest; then
     fail "clone for $fetch failed"
   fi
   if [ "$fetch" != "$push" ]; then
-    git -C "$dest" remote set-url origin --push $pushd
+    git -C "$dest" remote set-url origin --push $push
   fi
 
   success "cloned $fetch to `basename $dest`"
@@ -35,12 +35,12 @@ git_clone() {
 
 function git_pull() {
   fetch=$(head -n 1 $1)
-  push=$(tail -n 2 $1)
+  push=$(head -2 $1| tail -1)
   dest=$2
 
   git -C "$dest" remote set-url origin "$fetch"
   if [ "$fetch" != "$push" ]; then
-    git -C "$dest" remote set-url origin --push $pushd
+    git -C "$dest" remote set-url origin --push $push
   fi
 
   if ! git -C "$dest" pull origin master --rebase --quiet; then
