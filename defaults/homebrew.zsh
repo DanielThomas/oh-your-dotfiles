@@ -1,14 +1,21 @@
-function brew() {
-  local arch=$(uname -m)
-  case $arch in
+case $(uname -m) in
     x86_64)
-      /usr/local/bin/brew $@
+      HOMEBREW_PREFIX="/usr/local"
     ;;
     arm64)
-      /opt/homebrew/bin/brew $@
+      HOMEBREW_PREFIX="/opt/homebrew"
     ;;
     *)
-      >&2 echo "Unknown architecture $arch"
+      >&2 echo "Unknown architecture $(uname -m) unable to set HOMEBREW_PREFIX environment"
     ;;
-  esac
+esac
+export HOMEBREW_PREFIX
+
+
+function brew() {
+  if [ -z "$HOMEBREW_PREFIX" ]; then
+    brew $@
+  else
+    "$HOMEBREW_PREFIX/bin/brew" $@
+  fi
 }
