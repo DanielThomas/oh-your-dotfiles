@@ -11,7 +11,7 @@ git_clone() {
   push=$(head -2 $1| tail -1)
   dest=$2
 
-  if ! git -C "$dest" clone --quiet $fetch $dest; then
+  if ! git clone --quiet $fetch $dest; then
     fail "clone for $fetch failed"
   fi
   if [ "$fetch" != "$push" ]; then
