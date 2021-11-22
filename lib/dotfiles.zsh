@@ -55,6 +55,6 @@ function dotfiles_find_installer() {
 
 function dotfiles() {
   files=("$defaults")
-  files+=($(find "$HOME" -maxdepth 1 -type d -name '.*dotfiles*'  -not -name '.oh-your-dotfiles'))
+  files+=($(find "$HOME" -maxdepth 1 -type d -name '.*dotfiles*'  -not -name '.oh-your-dotfiles' | sort))
   echo "${files[@]}"
 }
