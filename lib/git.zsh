@@ -43,7 +43,7 @@ function git_pull() {
     git -C "$dest" remote set-url origin --push $push
   fi
 
-  if ! git -C "$dest" pull origin master --rebase --quiet; then
+  if ! git -C "$dest" pull origin $(git -C "$dest" remote show origin | grep 'HEAD branch' | sed 's/.*: //') --rebase --quiet; then
     fail "could not update $1"
   fi
   success "updated $1"
