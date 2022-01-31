@@ -10,10 +10,8 @@ function run_installers() {
   brew_install_upgrade_formulas
   mas_install_upgrade_formulas
 
-  info 'running installers'
   dotfiles_find_installer install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 
-  info 'opening files'
   for file_source in $(dotfiles_find_installer install.open); do
     OLD_IFS=$IFS
     IFS=$'\n'
