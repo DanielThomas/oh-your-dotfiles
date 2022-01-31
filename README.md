@@ -8,27 +8,25 @@ Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holm
 
 The framework is only currently tested on macOS.
 
-1. Clone this repository to `~/.oh-your-dotfiles`
+1. Clone this repository or download an archive and extract to a temporary location
+2. Start `zsh` using the extracted directory as the `ZDOTDIR`:
 ```
-git clone https://github.com/DanielThomas/oh-your-dotfiles.git ~/.oh-your-dotfiles
+ZDOTDIR=$(pwd) zsh
 ```
-2. Link the zshrc file to `~/.zshrc`
-```
-ln -s ~/.oh-your-dotfiles/oh-your.zshrc ~/.zshrc
-```
-3. If you're not on a macOS release where it's the default, change your default shell to `zsh`
+3. Run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them (On Apple Silicon run installations/updates only under the a native Terminal)
+4. If you're not on a macOS release where it's the default, change your default shell to `zsh`
 ```
 chsh -s /bin/zsh
 ```
-4. Start a new terminal session and run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them (On Apple Silicon run installations/updates only under the a native Terminal)
+5. Start a new terminal session
 
 ### Post Install ###
 
 After installation, optionally switch to the Homebrew managed `zsh`:
 
 ```
-sudo sh -c "echo /usr/local/bin/zsh >> /etc/shells"
-chsh -s /usr/local/bin/zsh
+sudo sh -c "echo $HOMEBREW_PREFIX/bin/zsh >> /etc/shells"
+chsh -s $HOMEBREW_PREFIX/bin/zsh
 ```
 
 You're good to go! 

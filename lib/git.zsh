@@ -43,8 +43,12 @@ function git_pull() {
     git -C "$dest" remote set-url origin --push $push
   fi
 
+  current_sha=$(git -C "$dest" rev-parse --short HEAD)
   if ! git -C "$dest" pull origin $(git -C "$dest" remote show origin | grep 'HEAD branch' | sed 's/.*: //') --rebase --quiet; then
     fail "could not update $1"
   fi
-  success "updated $1"
+  new_sha=$(git -C "$dest" rev-parse --short HEAD)
+  if [ "$current_sha" != "$new_sha" ]; then
+    success "updated $1 from $current_sha to $new_sha"
+  fi
 }

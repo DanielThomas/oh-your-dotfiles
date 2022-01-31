@@ -19,7 +19,7 @@ function realpath() {
   echo "$REALPATH"
 }
 
-export DOTFILES_DIR=$(dirname $(realpath $(echo ${(%):-%x})))
+export DOTFILES_DIR=$(dirname $(realpath $(echo ${(%):-%x})))/../
 source "$DOTFILES_DIR/lib/dotfiles.zsh"
 
 # preserve the original path so we can restore it on reload
@@ -51,7 +51,6 @@ fi
 
 DEFAULT_USER=$(whoami)
 DISABLE_AUTO_UPDATE="true"
-ZSH_THEME="agnoster"
 
 # configure plugins
 plugins=("${(@f)$(
