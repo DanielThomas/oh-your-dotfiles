@@ -9,9 +9,9 @@ Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holm
 The framework is only currently tested on macOS.
 
 1. Clone this repository or download an archive and extract to a temporary location
-2. Start `zsh` using the extracted directory as the `ZDOTDIR`:
+2. Start `zsh` using the cloned/extracted directory as the `ZDOTDIR`:
 ```
-ZDOTDIR=$(pwd) zsh
+ZDOTDIR=<path-to-oh-your-dotfiles> zsh
 ```
 3. Run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them (On Apple Silicon run installations/updates only under the a native Terminal)
 4. If you're not on a macOS release where it's the default, change your default shell to `zsh`
