@@ -1,10 +1,10 @@
-if [[ "$PROFILE_STARTUP" == true ]]; then
+if [[ "$DOTFILES_PROFILE_ZSHRC" == true ]]; then
     PS4=$'%D{%M%S%.} %N:%i> '
     exec 3>&2 2> /tmp/startlog.$$
     setopt xtrace prompt_subst
 fi
 
-## configure oh-your-zshrc ##
+## configure oh-your-dotfiles ##
 
 function realpath() {
   OURPWD=$PWD
@@ -19,9 +19,8 @@ function realpath() {
   echo "$REALPATH"
 }
 
-# oh-your-dotfiles
-export ZSHRC=$(dirname $(realpath $(echo ${(%):-%x})))
-source "$ZSHRC/lib/dotfiles.zsh"
+export DOTFILES_DIR=$(dirname $(realpath $(echo ${(%):-%x})))
+source "$DOTFILES_DIR/lib/dotfiles.zsh"
 
 # preserve the original path so we can restore it on reload
 if [ -z "$ZSHRC_PATH" ]; then
@@ -40,7 +39,7 @@ then
   source $HOME/.localrc
 fi
 
-ZSH=$ZSHRC/oh-my-zsh
+ZSH=$DOTFILES_DIR/oh-my-zsh
 if [ ! -d "$ZSH" ]; then
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
     echo "oh-my-zsh is not installed, run dotfiles_install"
@@ -101,7 +100,7 @@ done
 
 unset config_files
 
-if [[ "$PROFILE_STARTUP" == true ]]; then
+if [[ "$DOTFILES_PROFILE_ZSHRC" == true ]]; then
     unsetopt xtrace
     exec 2>&3 3>&-
 fi

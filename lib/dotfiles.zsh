@@ -15,11 +15,11 @@ function realpath() {
 defaults=$(realpath "${0:a:h}/../defaults")
 
 function dotfiles_install() {
-  $ZSHRC/lib/install.zsh
+  $DOTFILES_DIR/lib/install.zsh
 }
 
 function dotfiles_update() {
-  $ZSHRC/lib/install.zsh update
+  $DOTFILES_DIR/lib/install.zsh update
 }
 
 function dotfiles_reload() {

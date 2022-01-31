@@ -103,9 +103,9 @@ Entries in `install.mas` should be in the format `<id> <name>` (the same format 
 
 ## Profiling Startup Time ##
 
-If your shell is taking an excessive amount of time to start, run `zsh` with the `PROFILE_STARTUP` environment variable:
+If your shell is taking an excessive amount of time to start, run `zsh` with the `DOTFILES_PROFILE_ZSHRC` environment variable:
 
-    PROFILE_STARTUP=true zsh
+    DOTFILES_PROFILE_ZSHRC=true zsh
 
 Then run `tools/startlog.py` against the output in `/tmp` to determine the contributors to startup time. For more details, see:
 
