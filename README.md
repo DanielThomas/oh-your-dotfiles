@@ -77,6 +77,12 @@ The following extensions will cause files to be created in your home directory:
 - `*.plist`: Preference lists are copied to `~/Library/Preferences` during bootstrap
 - `*.launchagent`: Files are copied to `~/Library/LaunchAgents` during bootstrap
 
+#### Ignoring Directories ####
+
+By default `.git` directories and `bin/` directories are ignored. Add a `.dotfiles_ignore` file to a directory to ignore that directory completely.
+
+Run `dotfiles_ignored` to see the list of ignored directories, or `dotfiles_find \*` to see all candidate files.
+
 ### Installers ###
 
 Installation steps during bootstrap can be handled in several ways:

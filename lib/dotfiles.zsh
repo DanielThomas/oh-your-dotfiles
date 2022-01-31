@@ -33,9 +33,9 @@ function dotfiles_find() {
     arch_native="arm64"
   fi
   if [ "$arch_native" = "$arch" ]; then
-    find $(dotfiles) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
+    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
   else
-    find $(dotfiles) -name "$1" -o -name "$1.${arch}"
+    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}"
   fi
 }
 
@@ -45,12 +45,26 @@ function dotfiles_find_installer() {
   if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
     arch_native="arm64"
   fi
+  # only return universal installers for the native architecture to avoid double-executing the installers
   if [ "$arch_native" = "$arch" ]; then
-    # only return universal installers for the native architecture to avoid double-executing the installers
-    find $(dotfiles) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
+    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
   else
-    find $(dotfiles) -name "$1.${arch}"
+    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1.${arch}"
   fi
+}
+
+function dotfiles_find_ignore() {
+  for ignore in $(dotfiles_ignored); do
+    printf "-not -path %s " "$ignore/*"
+  done
+}
+
+function dotfiles_ignored() {
+  find $(dotfiles) -type d -name ".git"
+  find $(dotfiles) -type f -name ".dotfiles_ignore" -exec dirname {} \;
+  for dotfile in $(dotfiles); do
+    echo "$dotfile/bin"
+  done
 }
 
 function dotfiles() {
