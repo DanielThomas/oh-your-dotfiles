@@ -55,15 +55,15 @@ function dotfiles_find_installer() {
 
 function dotfiles_find_ignore() {
   for ignore in $(dotfiles_ignored); do
-    printf "-not -path %s " "$ignore/*"
+    printf "-not -path %s " "$ignore"
   done
 }
 
 function dotfiles_ignored() {
-  find $(dotfiles) -type d -name ".git"
-  find $(dotfiles) -type f -name ".dotfiles_ignore" -exec dirname {} \;
+  find $(dotfiles) -type f -name ".dotfiles_ignore" -exec dirname {} \; | sed 's#$#/*#'
   for dotfile in $(dotfiles); do
-    echo "$dotfile/bin"
+    echo "$dotfile/bin/*"
+    echo "$dotfile/.*"
   done
 }
 

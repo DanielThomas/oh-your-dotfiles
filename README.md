@@ -79,9 +79,9 @@ The following extensions will cause files to be created in your home directory:
 
 #### Ignoring Directories ####
 
-By default `.git` directories and `bin/` directories are ignored. Add a `.dotfiles_ignore` file to a directory to ignore that directory completely.
+Hidden files and directories and `bin/` directories are ignored by default. To ignore a specific directory, add a `.dotfiles_ignore` file to a directory.
 
-Run `dotfiles_ignored` to see the list of ignored directories, or `dotfiles_find \*` to see all candidate files.
+Run `dotfiles_ignored` to see the list of ignored directories and `dotfiles_find \*` to see all candidate files.
 
 ### Installers ###
 
