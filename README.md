@@ -37,8 +37,9 @@ Create yourself a dotfiles repository using the conventions below. See https://g
 
 - `dotfiles` - list dotfiles locations
 - `dotfiles_find` - find files within dotfiles locations, for example `dotfiles_find \*.gitrepo`
-- `dotfiles_install` - run dotfiles installers
+- `dotfiles_install` - install dotfiles
 - `dotfiles_update` - update dotfiles installed files. Equivalent to running `dotfiles_install` and choosing `S` to skip existing
+- `dotfiles_ignored` - show ignored file and directory patterns
 
 ## How it works ##
 
