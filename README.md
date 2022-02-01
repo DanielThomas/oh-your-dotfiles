@@ -20,15 +20,6 @@ chsh -s /bin/zsh
 ```
 5. Start a new terminal session
 
-### Post Install ###
-
-After installation, optionally switch to the Homebrew managed `zsh`:
-
-```
-sudo sh -c "echo $HOMEBREW_PREFIX/bin/zsh >> /etc/shells"
-chsh -s $HOMEBREW_PREFIX/bin/zsh
-```
-
 You're good to go! 
 
 Create yourself a dotfiles repository using the conventions below. See https://github.com/DanielThomas/dotfiles for an example of a dotfiles repository.
