@@ -24,25 +24,29 @@ function brew_prefix() {
 }
 
 function brew_install_upgrade_formulas() {
-  brew_check_and_install
   brew_install_formulas
   brew_upgrade_formulas
 }
 
 function brew_install_formulas() {
+  formulas=$(dotfiles_find_installer install.homebrew)
   casks=$(dotfiles_find_installer install.homebrew-cask)
-  if [ -n "$casks" ]; then
-    brew_installed=$(brew_run ls --cask --versions 2> /dev/null)
-    for file in `dotfiles_find_installer install.homebrew-cask`; do
-      brew_install cask "$file"
-    done
+
+  if [[ -n "$casks" || -n "$formulas" ]]; then
+    brew_check_and_install
   fi
 
-  formulas=$(dotfiles_find_installer install.homebrew)
   if [ -n "$formulas" ]; then
     brew_installed=$(brew_run ls --versions 2> /dev/null)
     for file in `dotfiles_find_installer install.homebrew`; do
       brew_install formula "$file"
+    done
+  fi
+
+  if [ -n "$casks" ]; then
+    brew_installed=$(brew_run ls --cask --versions 2> /dev/null)
+    for file in `dotfiles_find_installer install.homebrew-cask`; do
+      brew_install cask "$file"
     done
   fi
 }
@@ -69,10 +73,12 @@ function brew_update() {
 }
 
 function brew_upgrade_formulas() {
-  brew_update
-  brew_upgrade formula &
-  brew_upgrade cask &
-  wait
+  if [ -f $(brew_command) ]; then
+    brew_update
+    brew_upgrade formula &
+    brew_upgrade cask &
+    wait
+  fi
 }
 
 function brew_upgrade() {
