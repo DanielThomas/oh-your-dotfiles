@@ -4,6 +4,8 @@ The flexibility of dotfiles meets the power of [Oh My Zsh](https://github.com/ro
 
 Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holman/dotfiles).
 
+![A screenshot of the oh-your-dotfiles update process output](screenshot.png?raw=true)
+
 ## Install ##
 
 The framework is only currently tested on macOS.
