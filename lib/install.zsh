@@ -107,37 +107,30 @@ function dotfiles_install() {
   skip_all=false
   force_all=true
 
-  # git repositories
-  force_all=true
-  for file_source in $(dotfiles_find \*.gitrepo); do
-    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    install_file git $file_source $file_dest &
-  done
-  wait
-  force_all=false
-
-  # dotfiles can be in nested gitrepo files, so we continue until no destinations remain
+  # git repositories - dotfiles can be in nested gitrepo files, so we do multiple passes
+  cloned_repos=()
   while true; do
-    had_missing=false
+    did_clone=false
     for file_source in $(dotfiles_find \*.gitrepo); do
       file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-      if [ ! -d "$file_dest" ]; then
-        had_missing=true
+      if [[ ! " ${cloned_repos[*]} " =~ " $file_source " ]]; then
+        cloned_repos+=($file_source)
         install_file git $file_source $file_dest &
+        did_clone=true
       fi
-      wait
     done
-    if [ "$had_missing" = "false" ]; then
+    wait
+    if [ "$did_clone" = "false" ]; then
       break
     fi
   done
 
-  force_all=true
   for file_source in $(dotfiles_find \*.themegitrepo); do
     file_dest="$HOME/.oh-my-zsh/custom/themes/`basename \"${file_source%.*}\"`"
     install_file git $file_source $file_dest &
   done
   wait
+
   force_all=false
 
   # symlinks

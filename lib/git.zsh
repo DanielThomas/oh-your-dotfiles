@@ -12,7 +12,8 @@ git_clone() {
   dest=$2
 
   if ! git clone --quiet $fetch $dest; then
-    fail "clone for $fetch failed"
+    warn "clone for $fetch failed"
+    return
   fi
   if [ "$fetch" != "$push" ]; then
     git -C "$dest" remote set-url origin --push $push
@@ -46,7 +47,7 @@ function git_pull() {
   current_sha=$(git -C "$dest" rev-parse --short HEAD)
   branch=$(git -C "$dest" remote show origin | grep 'HEAD branch' | sed 's/.*: //')
   if ! git -C "$dest" pull origin "$branch" --rebase --quiet; then
-    fail "could not update $1"
+    warn "could not update $1"
   fi
   new_sha=$(git -C "$dest" rev-parse --short HEAD)
   if [ "$current_sha" != "$new_sha" ]; then
