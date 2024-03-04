@@ -53,6 +53,10 @@ function dotfiles_find_installer() {
   fi
 }
 
+function dotfiles_find_symlink() {
+  find $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink"
+}
+
 function dotfiles_find_ignore() {
   for ignore in $(dotfiles_ignored); do
     printf "-not -path %s " "$ignore"

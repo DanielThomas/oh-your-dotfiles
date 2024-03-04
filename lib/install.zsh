@@ -134,7 +134,7 @@ function dotfiles_install() {
   force_all=false
 
   # symlinks
-  for file_source in $(dotfiles_find \*.symlink); do
+  for file_source in $(dotfiles_find_symlink); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     if [ -d $file_source ]; then
       for directory_file_source in $(find "$file_source" -type f); do
