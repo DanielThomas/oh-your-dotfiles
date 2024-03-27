@@ -204,7 +204,11 @@ function install() {
   dotfiles_install
   for arch in $(install_arch_list); do
     info "running installers for $arch"
-    arch -arch "$arch" "$libdir/install-arch.zsh"
+    if [[ "Darwin" == "$(uname)" ]]; then
+      arch -arch "$arch" "$libdir/install-arch.zsh"
+    else
+      "$libdir/install-arch.zsh"
+    fi
   done
   create_localrc
 }

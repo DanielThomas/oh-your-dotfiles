@@ -29,8 +29,10 @@ function dotfiles_reload() {
 function dotfiles_find() {
   local arch=$(uname -m)
   local arch_native="$arch"
-  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
-    arch_native="arm64"
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
+      arch_native="arm64"
+    fi
   fi
   if [ "$arch_native" = "$arch" ]; then
     find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
@@ -42,8 +44,10 @@ function dotfiles_find() {
 function dotfiles_find_installer() {
   local arch=$(uname -m)
   local arch_native="$arch"
-  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
-    arch_native="arm64"
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
+      arch_native="arm64"
+    fi
   fi
   # only return universal installers for the native architecture to avoid double-executing the installers
   if [ "$arch_native" = "$arch" ]; then
