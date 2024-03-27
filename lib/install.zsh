@@ -225,11 +225,11 @@ function main() {
     info 'updating dotfiles'
     skip_all_silent=true
     install
-    info 'complete! run dotfiles_reload or restart your session for environment changes to take effect'
+    success 'complete! run dotfiles_reload or restart your session for environment changes to take effect'
   else
     info 'installing dotfiles'
     install
-    info 'complete! use dotfiles_update to keep up to date. run dotfiles_reload or restart your session for environment changes to take effect'
+    success 'complete! use dotfiles_update to keep up to date. run dotfiles_reload or restart your session for environment changes to take effect'
   fi
 
   echo ''
