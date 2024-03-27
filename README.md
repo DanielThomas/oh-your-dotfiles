@@ -87,6 +87,7 @@ Installation steps during bootstrap can be handled in several ways:
 - `install.homebrew-tap`: A list of Homebrew taps
 - `install.mas`: A list of App Store apps to install
 - `install.open`: A list of files to be handled by the default application association using the `open` command
+- `install.apt`: A list of apt packages to install
 
 #### Installing from the App Store with `install.mas` files ####
 
