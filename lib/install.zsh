@@ -115,7 +115,7 @@ function dotfiles_install() {
       file_dest="$HOME/.`basename \"${file_source%.*}\"`"
       if [[ ! " ${cloned_repos[*]} " =~ " $file_source " ]]; then
         cloned_repos+=($file_source)
-        install_file git $file_source $file_dest &
+        install_file git $file_source $file_dest
         did_clone=true
       fi
     done
@@ -127,7 +127,7 @@ function dotfiles_install() {
 
   for file_source in $(dotfiles_find \*.themegitrepo); do
     file_dest="$HOME/.oh-my-zsh/custom/themes/`basename \"${file_source%.*}\"`"
-    install_file git $file_source $file_dest &
+    install_file git $file_source $file_dest
   done
   wait
 

@@ -39,6 +39,7 @@ function git_pull() {
   push=$(head -2 $1| tail -1)
   dest=$2
 
+  info "fetching $dest from $fetch"
   git -C "$dest" remote set-url origin "$fetch"
   if [ "$fetch" != "$push" ]; then
     git -C "$dest" remote set-url origin --push $push
