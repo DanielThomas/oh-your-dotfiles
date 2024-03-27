@@ -39,17 +39,14 @@ function git_pull() {
   push=$(head -2 $1| tail -1)
   dest=$2
 
-  info "fetching $dest from $fetch"
   git -C "$dest" remote set-url origin "$fetch"
   if [ "$fetch" != "$push" ]; then
     git -C "$dest" remote set-url origin --push $push
   fi
 
   current_sha=$(git -C "$dest" rev-parse --short HEAD)
-  branch=$(git -C "$dest" remote show origin | grep 'HEAD branch' | sed 's/.*: //')
-  if ! git -C "$dest" pull origin "$branch" --rebase --quiet; then
-    warn "could not update $1"
-  fi
+  branch=$(git -C "$dest" remote show origin 2> /dev/null | grep 'HEAD branch' | sed 's/.*: //')
+  run "pulling $dest from $fetch" "git -C $dest pull origin $branch --rebase --quiet"
   new_sha=$(git -C "$dest" rev-parse --short HEAD)
   if [ "$current_sha" != "$new_sha" ]; then
     success "updated $1 from $current_sha to $new_sha (branch $branch)"
