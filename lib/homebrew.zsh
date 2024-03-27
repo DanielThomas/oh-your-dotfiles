@@ -29,6 +29,9 @@ function brew_install_upgrade_formulas() {
 }
 
 function brew_install_formulas() {
+  if [[ "Darwin" != "$(uname)" ]]; then
+    return
+  fi
   formulas=$(dotfiles_find_installer install.homebrew)
   casks=$(dotfiles_find_installer install.homebrew-cask)
 
