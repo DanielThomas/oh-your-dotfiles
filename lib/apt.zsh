@@ -13,5 +13,4 @@ apt_install_upgrade() {
 		done
     done
   fi
-  run "upgrading system packages" "sudo apt --yes upgrade"
 }
