@@ -35,9 +35,9 @@ function dotfiles_find() {
     fi
   fi
   if [ "$arch_native" = "$arch" ]; then
-    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
+    find -L $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
   else
-    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}"
+    find -L $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}"
   fi
 }
 
@@ -51,14 +51,14 @@ function dotfiles_find_installer() {
   fi
   # only return universal installers for the native architecture to avoid double-executing the installers
   if [ "$arch_native" = "$arch" ]; then
-    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
+    find -L $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1" -o -name "$1.${arch}" -o -name "$1.${arch}-native"
   else
-    find $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1.${arch}"
+    find -L $(dotfiles) -type f $(dotfiles_find_ignore) -name "$1.${arch}"
   fi
 }
 
 function dotfiles_find_symlink() {
-  find $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink"
+  find -L $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink"
 }
 
 function dotfiles_find_ignore() {
@@ -68,7 +68,7 @@ function dotfiles_find_ignore() {
 }
 
 function dotfiles_ignored() {
-  find $(dotfiles) -type f -name ".dotfiles_ignore" -exec dirname {} \; | sed 's#$#/*#'
+  find -L $(dotfiles) -type f -name ".dotfiles_ignore" -exec dirname {} \; | sed 's#$#/*#'
   for dotfile in $(dotfiles); do
     echo "$dotfile/bin/*"
     echo "$dotfile/.*"
@@ -77,6 +77,10 @@ function dotfiles_ignored() {
 
 function dotfiles() {
   files=("$defaults")
-  files+=($(find "$HOME" -maxdepth 1 -type d -name '.*dotfiles*'  -not -name '.oh-your-dotfiles' | sort))
+  for file in $(find "$HOME" -maxdepth 1 -name '.*dotfiles*'  -not -name '.oh-your-dotfiles' | sort); do
+    if [ -d "$file" ]; then
+      files+=($file)
+    fi
+  done
   echo "${files[@]}"
 }
