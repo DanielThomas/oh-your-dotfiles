@@ -158,31 +158,33 @@ function dotfiles_install() {
     fi
   done
 
-  # preferences
-  for file_source in $(dotfiles_find \*.plist); do
-    file_dest="$HOME/Library/Preferences/`basename $file_source`"
-    install_file copy $file_source $file_dest
-  done
+  if [[ "Darwin" == "$(uname)" ]]; then
+    # preferences
+    for file_source in $(dotfiles_find \*.plist); do
+      file_dest="$HOME/Library/Preferences/`basename $file_source`"
+      install_file copy $file_source $file_dest
+    done
 
-  # fonts
-  for file_source in $(dotfiles_find \*.otf); do
-    file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-    install_file copy $file_source $file_dest
-  done
-  for file_source in $(dotfiles_find \*.ttf); do
-    file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-    install_file copy $file_source $file_dest
-  done
-  for file_source in $(dotfiles_find \*.ttc); do
-    file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-    install_file copy $file_source $file_dest
-  done
+    # fonts
+    for file_source in $(dotfiles_find \*.otf); do
+      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
+      install_file copy $file_source $file_dest
+    done
+    for file_source in $(dotfiles_find \*.ttf); do
+      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
+      install_file copy $file_source $file_dest
+    done
+    for file_source in $(dotfiles_find \*.ttc); do
+      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
+      install_file copy $file_source $file_dest
+    done
 
-  # launch agents
-  for file_source in $(dotfiles_find \*.launchagent); do
-    file_dest="$HOME/Library/LaunchAgents/$(basename $file_source | sed 's/.launchagent//')"
-    install_file copy $file_source $file_dest
-  done
+    # launch agents
+    for file_source in $(dotfiles_find \*.launchagent); do
+      file_dest="$HOME/Library/LaunchAgents/$(basename $file_source | sed 's/.launchagent//')"
+      install_file copy $file_source $file_dest
+    done
+  fi
 }
 
 function install_arch_list() {

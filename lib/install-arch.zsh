@@ -7,6 +7,7 @@ source $libdir/mas.zsh
 source $libdir/git.zsh
 
 function run_installers() {
+  apt_install_upgrade
   brew_install_upgrade_formulas
   mas_install_upgrade_formulas
 
