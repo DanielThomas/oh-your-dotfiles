@@ -45,7 +45,7 @@ function git_pull() {
   fi
 
   current_sha=$(git -C "$dest" rev-parse --short HEAD)
-  branch=$(git -C "$dest" remote show origin 2> /dev/null | grep 'HEAD branch' | sed 's/.*: //')
+  branch=$(git -C "$dest" rev-parse --abbrev-ref HEAD)
   remote=$(git -C "$dest" remote get-url origin)
   run "pulling $dest from $remote" "git -C $dest pull origin $branch --rebase --quiet"
   new_sha=$(git -C "$dest" rev-parse --short HEAD)
