@@ -2,6 +2,7 @@
 libdir=${0:a:h}
 source $libdir/dotfiles.zsh
 source $libdir/terminal.zsh
+source $libdir/apt.zsh
 source $libdir/homebrew.zsh
 source $libdir/mas.zsh
 source $libdir/git.zsh
