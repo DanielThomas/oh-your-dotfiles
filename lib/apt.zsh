@@ -8,10 +8,10 @@ apt_install_upgrade() {
 	for file in "$packages"; do
 		for package in $(cat "$packages"); do
 			if dpkg -l "$package" > /dev/null; then
-				run "installing $package" "sudo apt install $(package)"
+				run "installing $package" "sudo apt --yes install $(package)"
 			fi
 		done
     done
   fi
-  run "upgrading system packages" "sudo apt upgrade"
+  run "upgrading system packages" "sudo apt --yes upgrade"
 }
