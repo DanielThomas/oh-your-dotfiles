@@ -10,17 +10,21 @@ function brew_command() {
 
 function brew_prefix() {
   local arch=$(uname -m)
-  case $arch in
-    x86_64)
-      echo "/usr/local"
-    ;;
-    arm64)
-      echo "/opt/homebrew"
-    ;;
-    *)
-      >&2 echo "Cannot determine brew prefix, unknown architecture $arch"
-    ;;
-  esac
+  if [[ "Darwin" == "$(uname)" ]]; then
+    case $arch in
+      x86_64)
+        echo "/usr/local"
+      ;;
+      arm64)
+        echo "/opt/homebrew"
+      ;;
+      *)
+        >&2 echo "Cannot determine brew prefix, unknown architecture $arch"
+      ;;
+    esac
+  else
+    echo "$HOME/.linuxbrew"
+  fi
 }
 
 function brew_install_upgrade_formulas() {
@@ -29,11 +33,12 @@ function brew_install_upgrade_formulas() {
 }
 
 function brew_install_formulas() {
+  extension="homebrew"
   if [[ "Darwin" != "$(uname)" ]]; then
-    return
+    extension="linuxbrew"
   fi
-  formulas=$(dotfiles_find_installer install.homebrew)
-  casks=$(dotfiles_find_installer install.homebrew-cask)
+  formulas=$(dotfiles_find_installer "install.${extension}")
+  casks=$(dotfiles_find_installer "install..${extension}-cask")
 
   if [[ -n "$casks" || -n "$formulas" ]]; then
     brew_check_and_install
@@ -41,14 +46,14 @@ function brew_install_formulas() {
 
   if [ -n "$formulas" ]; then
     brew_installed=$(brew_run ls --versions 2> /dev/null)
-    for file in `dotfiles_find_installer install.homebrew`; do
+    for file in `dotfiles_find_installer install.${extension}`; do
       brew_install formula "$file"
     done
   fi
 
   if [ -n "$casks" ]; then
     brew_installed=$(brew_run ls --cask --versions 2> /dev/null)
-    for file in `dotfiles_find_installer install.homebrew-cask`; do
+    for file in `dotfiles_find_installer install.${extension}-cask`; do
       brew_install cask "$file"
     done
   fi
@@ -95,16 +100,11 @@ function brew_upgrade() {
 function brew_check_and_install() {
   if [ ! -f $(brew_command) ]; then
     prefix=$(brew_prefix)
-    if [ "$prefix" = "/usr/local" ]; then
-      info "homebrew is not installed in $prefix, running standard installer"
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    else
-      info "homebrew is not installed in $prefix, installing to custom prefix"
-      run "creating directory $prefix" "sudo mkdir -p ${prefix}"
-      owner="$(whoami):$(id -g -n)"
-      run "changing ownership of $prefix to $owner" "sudo chown -R ${owner} ${prefix}"
-      run "downloading homebrew and extracting to $prefix" "curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ${prefix}"
-    fi
+    info "homebrew is not installed in $prefix"
+    run "creating directory $prefix" "sudo mkdir -p ${prefix}"
+    owner="$(whoami):$(id -g -n)"
+    run "changing ownership of $prefix to $owner" "sudo chown -R ${owner} ${prefix}"
+    run "downloading homebrew and extracting to $prefix" "curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ${prefix}"
   fi
   brew_taps
 }
