@@ -13,6 +13,7 @@ apt_install_upgrade() {
 			fi
 		done
     done
-  	sudo apt upgrade
   fi
+  run "upgrading system packages"
+  sudo apt upgrade
 }
