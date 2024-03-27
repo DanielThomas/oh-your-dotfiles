@@ -186,19 +186,23 @@ function dotfiles_install() {
 }
 
 function install_arch_list() {
-  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
-    echo "arm64e"
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
+      echo "arm64e"
+    fi
   fi
   echo "x86_64"
 }
 
 function install() {
-  if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
-    if [ $(uname -m) != "arm64" ]; then
-      fail "this command must be run on an arm64 terminal on Apple Silicon"
-    fi
-    if [[ ! -f "/usr/libexec/rosetta/oahd" ]]; then
-      run 'installing Rosetta' "/usr/sbin/softwareupdate --install-rosetta --agree-to-license"
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
+      if [ $(uname -m) != "arm64" ]; then
+        fail "this command must be run on an arm64 terminal on Apple Silicon"
+      fi
+      if [[ ! -f "/usr/libexec/rosetta/oahd" ]]; then
+        run 'installing Rosetta' "/usr/sbin/softwareupdate --install-rosetta --agree-to-license"
+      fi
     fi
   fi
   dotfiles_install
