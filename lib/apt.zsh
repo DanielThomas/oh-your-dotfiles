@@ -7,7 +7,7 @@ apt_install_upgrade() {
   if [[ -n "$package_files" ]]; then
     for file in "$package_files"; do
         for package in $(cat "$package_files"); do
-            if ! dpkg -l "$package" 1> /dev/null 2>& 1; then
+            if ! dpkg -s "$package" 1> /dev/null 2>& 1; then
                 run "installing $package" "sudo apt --yes install $package"
             fi
         done
