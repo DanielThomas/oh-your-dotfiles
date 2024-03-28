@@ -38,7 +38,7 @@ function brew_install_formulas() {
     extension="linuxbrew"
   fi
   formulas=$(dotfiles_find_installer "install.${extension}")
-  casks=$(dotfiles_find_installer "install..${extension}-cask")
+  casks=$(dotfiles_find_installer "install.${extension}-cask")
 
   if [[ -n "$casks" || -n "$formulas" ]]; then
     brew_check_and_install
