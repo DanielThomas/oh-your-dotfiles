@@ -82,7 +82,7 @@ Run `dotfiles_ignored` to see the list of ignored directories and `dotfiles_find
 Installation steps during bootstrap can be handled in several ways:
 
 - `install.sh`: An installation shellscript
-- `install.homebrew`: A list of Homebrew formulas to install
+- `install.homebrew`: A list of Homebrew formulas to install. Use `install.linuxbrew` for Linux
 - `install.homebrew-cask`: A list of Homebrew casks to install
 - `install.homebrew-tap`: A list of Homebrew taps
 - `install.mas`: A list of App Store apps to install
