@@ -83,8 +83,10 @@ function brew_update() {
 function brew_upgrade_formulas() {
   if [ -f $(brew_command) ]; then
     brew_update
-    brew_upgrade formula &
-    brew_upgrade cask &
+    brew_upgrade formula
+    if [[ "Darwin" == "$(uname)" ]]; then
+      brew_upgrade cask
+    fi
     wait
   fi
 }
