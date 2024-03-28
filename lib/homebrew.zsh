@@ -1,7 +1,7 @@
 brew_installed=""
 
 function brew_run() {
-   $(brew_command) $@
+   HOMEBREW_NO_AUTO_UPDATE=1 $(brew_command) $@
 }
 
 function brew_command() {
@@ -115,7 +115,7 @@ function brew_taps() {
   for tapfile in `dotfiles_find_installer install.homebrew-tap`; do
     while read -r LINE || [[ -n "$LINE" ]]; do
       args=($(echo $LINE))
-      HOMEBREW_NO_AUTO_UPDATE=1 brew_run tap ${args[@]}
+      brew_run tap ${args[@]}
     done < $tapfile
   done
 }
