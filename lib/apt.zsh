@@ -2,15 +2,12 @@ apt_install_upgrade() {
   if [[ "Linux" != "$(uname)" ]]; then
     return
   fi
-  package_files=$(dotfiles_find_installer install.apt)
-  if [[ -n "$package_files" ]]; then
-    run "updating apt indexes" "sudo apt update"
-    for file in $package_files; do
-        for package in $(cat "$file"); do
-            if ! dpkg -s "$package" 1> /dev/null 2>& 1; then
-                run "installing $package" "sudo apt --yes install $package"
-            fi
-        done
+  run "updating apt indexes" "sudo apt update"
+  for aptfile in `dotfiles_find_installer install.apt`; do
+    for package in $(cat "$aptfile"); do
+      if ! dpkg -s "$package" 1> /dev/null 2>& 1; then
+        run "installing $package" "sudo apt --yes install $package"
+      fi
     done
-  fi
+  done
 }
