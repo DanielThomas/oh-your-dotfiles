@@ -15,7 +15,7 @@ function realpath() {
 defaults=$(realpath "${0:a:h}/../defaults")
 
 function dotfiles_install() {
-  $DOTFILES_DIR/lib/install.zsh
+  $DOTFILES_DIR/lib/install.zsh $1
 }
 
 function dotfiles_update() {
