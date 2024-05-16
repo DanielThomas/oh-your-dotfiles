@@ -225,7 +225,7 @@ function main() {
   skip_all_silent=false
   force_all_silent=false
   if [ "$1" = "force" ]; then
-    info 'installing dotfiles'
+    info 'installing dotfiles (force)'
     force_all_silent=true
     install
     success 'complete! use dotfiles_update to keep up to date. run dotfiles_reload or restart your session for environment changes to take effect'    
