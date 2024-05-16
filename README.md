@@ -11,16 +11,15 @@ Inspired by and compatible with [Zach Holman's dotfiles](https://github.com/holm
 The framework is only currently tested on macOS.
 
 1. Clone this repository to `~/.oh-your-dotfiles`
-2. Start `zsh` using the directory as the `ZDOTDIR`:
+2. Run `dotfiles_install` with:
 ```
-ZDOTDIR=~/.oh-your-dotfiles zsh
+ZDOTDIR=~/.oh-your-dotfiles zsh -ic dotfiles_install
 ```
-3. Run `dotfiles_install`. If you haven't yet got the Command-line Developer Tools installed you'll be prompted to install them (On Apple Silicon run installations/updates only under the a native Terminal)
-4. If you're not on a macOS release where it's the default, change your default shell to `zsh`
+3. If your default shell isn't already `zsh`, change your default shell:
 ```
 chsh -s /bin/zsh
 ```
-5. Start a new terminal session
+4. Start a new session
 
 You're good to go! 
 
