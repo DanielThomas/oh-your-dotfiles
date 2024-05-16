@@ -118,7 +118,7 @@ function brew_taps() {
       args=( ${=LINE} )
       tap="${args[1]}"
       if ! echo "$brew_tapped" | grep -q "$tap"; then
-        run "tapping ${args[1]}" "brew_run tap ${args[@]}"
+        run "tapping ${args[1]}" "brew_run tap ${args[1]} ${args[2]}"
       fi
     done < $tapfile
   done
