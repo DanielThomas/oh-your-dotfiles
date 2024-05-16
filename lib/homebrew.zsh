@@ -112,10 +112,14 @@ function brew_check_and_install() {
 }
 
 function brew_taps() {
+  brew_tapped=$(brew_run tap 2> /dev/null)
   for tapfile in `dotfiles_find_installer install.homebrew-tap`; do
     while read -r LINE || [[ -n "$LINE" ]]; do
-      args=($(echo $LINE))
-      brew_run tap ${args[@]}
+      args=( ${=LINE} )
+      tap="${args[1]}"
+      if ! echo "$brew_tapped" | grep -q "$tap"; then
+        run "tapping ${args[1]}" "brew_run tap ${args[@]}"
+      fi
     done < $tapfile
   done
 }
