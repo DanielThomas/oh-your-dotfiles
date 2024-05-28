@@ -1,4 +1,4 @@
-if [[ "Darwin" == "$(uname)" ]]; then
+if [ "Darwin" = "$(uname)" ]; then
   case $(uname -m) in
       x86_64)
         HOMEBREW_PREFIX="/usr/local"
