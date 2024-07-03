@@ -4,6 +4,7 @@ git_clone_or_pull() {
   else
     git_clone $1 $2
   fi
+  git_patch $1
 }
 
 git_clone() {
@@ -20,18 +21,6 @@ git_clone() {
   fi
 
   success "cloned $fetch to `basename $dest`"
-
-  dir=$(dirname $1)
-  base=$(basename ${1%.*})
-  for patch in $(find $dir -maxdepth 2 -name $base\*.gitpatch); do
-    pushd $dest >> /dev/null
-    if ! git -C "$dest" am --quiet $patch; then
-      fail "apply patch failed"
-    fi
-
-    success "applied $patch"
-    popd >> /dev/null
-  done
 }
 
 function git_pull() {
@@ -52,4 +41,12 @@ function git_pull() {
   if [ "$current_sha" != "$new_sha" ]; then
     success "updated $1 from $current_sha to $new_sha (branch $branch)"
   fi
+}
+
+git_patch() {
+  dir=$(dirname $1)
+  base=$(basename ${1%.*})
+  for patch in $(find $dir -maxdepth 2 -name $base\*.gitpatch); do
+    run "applying $patch to $dest" "git -C "$dest" apply --quiet $patch"
+  done
 }
