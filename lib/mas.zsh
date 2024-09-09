@@ -7,14 +7,18 @@ function mas_install_upgrade_formulas() {
 
 function mas_install_formulas() {
   mas_files=`dotfiles_find install.mas`
-  if [ -n "$mas_files" ]; then
-    mas_check_and_install
-    mas_installed=$(mas list 2> /dev/null)
-    for file in $mas_files; do
-      while read formula; do
-        mas_install $formula
-      done < <(grep ^ $file)
-    done
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if [ -n "$mas_files" ]; then
+      mas_check_and_install
+      mas_installed=$(mas list 2> /dev/null)
+      for file in $mas_files; do
+        while read formula; do
+          mas_install $formula
+        done < <(grep ^ $file)
+      done
+    fi
+  else
+    info "mas is macos only, skipping"
   fi
 }
 
