@@ -1,5 +1,5 @@
 apt_install_upgrade() {
-  if [[ "Linux" != "$(uname)" ]]; then
+  if [[ "Linux" != "$(uname)" ]] || ! which apt &> /dev/null; then
     return
   fi
   run "updating apt indexes" "sudo apt update"
