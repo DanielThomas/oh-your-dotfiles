@@ -58,7 +58,7 @@ function dotfiles_find_installer() {
 }
 
 function dotfiles_find_symlink() {
-  find -L $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink"
+  find -L $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink" -prune
 }
 
 function dotfiles_find_ignore() {

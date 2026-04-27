@@ -34,6 +34,13 @@ function link_file() {
   success "linked $1 to $2"
 }
 
+function install_link() {
+  local source=$1 dest=$2
+  if [ ! -L $dest ] || [ "$(readlink "$dest")" != "$source" ]; then
+    install_file link $source $dest
+  fi
+}
+
 function copy_file() {
   mkdir -p $(dirname $2)
   run "copying $1 to $2" "cp $1 $2"
@@ -144,24 +151,13 @@ function dotfiles_install() {
   for file_source in $(dotfiles_find_symlink); do
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     if [ -d $file_source ]; then
-      for directory_file_source in $(find "$file_source" -type f); do
-        directory_file_dest=${file_dest}${directory_file_source#"$file_source"}
-        if [ -L $directory_file_dest ]; then
-          if [ "$(readlink "$directory_file_dest")" != "$directory_file_source" ]; then
-            install_file link $directory_file_source $directory_file_dest
-          fi
-        else
-            install_file link $directory_file_source $directory_file_dest
-        fi
+      for entry in $(find "$file_source" -mindepth 1 \( -type d -name "*.symlink" -prune -print \) -o -type f -print); do
+        entry_dest="${file_dest}${entry#"$file_source"}"
+        [ -d $entry ] && entry_dest="${entry_dest%.symlink}"
+        install_link $entry $entry_dest
       done
     else
-      if [ -L $file_dest ]; then
-        if [ "$(readlink "$file_dest")" != "$file_source" ]; then
-          install_file link $file_source $file_dest
-        fi
-      else
-        install_file link $file_source $file_dest
-      fi
+      install_link $file_source $file_dest
     fi
   done
 
