@@ -152,8 +152,7 @@ function dotfiles_install() {
     file_dest="$HOME/.`basename \"${file_source%.*}\"`"
     if [ -d $file_source ]; then
       for entry in $(find "$file_source" -mindepth 1 \( -type d -name "*.symlink" -prune -print \) -o -type f -print); do
-        entry_dest="${file_dest}${entry#"$file_source"}"
-        [ -d $entry ] && entry_dest="${entry_dest%.symlink}"
+        entry_dest="${file_dest}${entry#"$file_source"%.symlink}"
         install_link $entry $entry_dest
       done
     else
