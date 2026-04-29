@@ -1,7 +1,4 @@
 apt_install_upgrade() {
-  if [[ "Linux" != "$(uname)" ]]; then
-    return
-  fi
   run "updating apt indexes" "sudo apt update"
   local apt_upgradable=$(apt list --upgradeable)
   local apt_packages=()

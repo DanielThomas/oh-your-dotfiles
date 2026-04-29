@@ -7,15 +7,23 @@ fi
 libdir=${0:a:h}
 source $libdir/dotfiles.zsh
 source $libdir/terminal.zsh
-source $libdir/apt.zsh
 source $libdir/homebrew.zsh
-source $libdir/mas.zsh
+if [[ "Linux" == "$(uname)" ]]; then
+  source $libdir/apt.zsh
+fi
+if [[ "Darwin" == "$(uname)" ]]; then
+  source $libdir/mas.zsh
+fi
 source $libdir/git.zsh
 
 function run_installers() {
-  apt_install_upgrade
+  if [[ "Linux" == "$(uname)" ]]; then
+    apt_install_upgrade
+  fi
   brew_install_upgrade_formulas
-  mas_install_upgrade_formulas
+  if [[ "Darwin" == "$(uname)" ]]; then
+    mas_install_upgrade_formulas
+  fi
 
   dotfiles_find_installer install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 

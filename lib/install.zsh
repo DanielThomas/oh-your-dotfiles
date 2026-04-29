@@ -8,7 +8,9 @@ libdir=${0:a:h}
 source $libdir/dotfiles.zsh
 source $libdir/terminal.zsh
 source $libdir/homebrew.zsh
-source $libdir/mas.zsh
+if [[ "Darwin" == "$(uname)" ]]; then
+  source $libdir/mas.zsh
+fi
 source $libdir/git.zsh
 
 function link_files() {
