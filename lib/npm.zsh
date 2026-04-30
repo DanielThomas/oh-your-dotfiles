@@ -44,10 +44,11 @@ function npm_install() {
     package_name="${package%%@*}"
   fi
   if ! echo "$npm_installed" | grep -q "^${package_name}$"; then
-    if $(npm_command) install -g --prefix $(brew_prefix) $package > /dev/null 2>&1; then
+    local output
+    if output=$($(npm_command) install -g $package 2>&1); then
       success "installed $package"
     else
-      fail "failed to install $package"
+      fail "failed to install $package\n$output"
     fi
   fi
 }
