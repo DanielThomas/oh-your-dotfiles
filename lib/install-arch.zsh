@@ -14,6 +14,7 @@ fi
 if [[ "Darwin" == "$(uname)" ]]; then
   source $libdir/mas.zsh
 fi
+source $libdir/npm.zsh
 source $libdir/git.zsh
 
 function run_installers() {
@@ -23,6 +24,17 @@ function run_installers() {
   brew_install_upgrade_formulas
   if [[ "Darwin" == "$(uname)" ]]; then
     mas_install_upgrade_formulas
+  fi
+
+  local arch=$(uname -m)
+  local arch_native="$arch"
+  if [[ "Darwin" == "$(uname)" ]]; then
+    if sysctl -n machdep.cpu.brand_string | grep "Apple" > /dev/null; then
+      arch_native="arm64"
+    fi
+  fi
+  if [[ "$arch" == "$arch_native" ]]; then
+    npm_install_upgrade_formulas
   fi
 
   dotfiles_find_installer install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done

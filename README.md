@@ -85,8 +85,13 @@ Installation steps during bootstrap can be handled in several ways:
 - `install.homebrew-cask`: A list of Homebrew casks to install
 - `install.homebrew-tap`: A list of Homebrew taps
 - `install.mas`: A list of App Store apps to install
+- `install.npm`: A list of npm packages to install to the Homebrew `node` installation
 - `install.open`: A list of files to be handled by the default application association using the `open` command
 - `install.apt`: A list of apt packages to install
+
+#### Installing npm packages with `install.npm` files ####
+
+npm packages listed in `install.npm` files are installed globally with binaries linked into the Homebrew prefix `bin` directory. Node.js and npm are installed via Homebrew automatically if not present. Entries should be one package per line, optionally with a version specifier (e.g. `typescript` or `prettier@3`).
 
 #### Installing from the App Store with `install.mas` files ####
 
