@@ -10,55 +10,72 @@ load test_helper
   [[ "$output" == *"completion.zsh"* ]]
 }
 
-@test "finds native architecture suffixed files" {
-  local arch=$(uname -m)
-  create_files "path.zsh" "path.zsh.${arch}" "path.zsh.${arch}-native"
+# OS suffix
+
+@test "finds os suffixed files" {
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  create_files "path.zsh" "path.zsh.${os}"
   run_dotfiles_fn dotfiles_find "'*.zsh'"
-  [[ "$output" == *"path.zsh.${arch}"* ]]
-  [[ "$output" == *"path.zsh.${arch}-native"* ]]
+  [[ "$output" == *"path.zsh.${os}"* ]]
 }
 
-@test "excludes files for non-native architecture" {
+@test "excludes os suffixed files for wrong os" {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    local other_os="linux"
+  else
+    local other_os="darwin"
+  fi
+  create_files "path.zsh" "path.zsh.${other_os}"
+  run_dotfiles_fn dotfiles_find "'*.zsh'"
+  [[ "$output" == *"topic/path.zsh"* ]]
+  [[ "$output" != *"${other_os}"* ]]
+}
+
+@test "finds os suffixed files on simulated linux" {
+  create_files "path.zsh" "path.zsh.linux" "path.zsh.darwin"
+  run_dotfiles_fn_with_platform x86_64 Linux false dotfiles_find "'*.zsh'"
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == *"path.zsh.linux"* ]]
+  [[ "$output" != *"path.zsh.darwin"* ]]
+}
+
+# OS-arch suffix
+
+@test "finds os-arch suffixed files" {
+  local arch=$(uname -m)
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  create_files "path.zsh" "path.zsh.${os}-${arch}"
+  run_dotfiles_fn dotfiles_find "'*.zsh'"
+  [[ "$output" == *"path.zsh.${os}-${arch}"* ]]
+}
+
+@test "excludes os-arch files for wrong os" {
+  local arch=$(uname -m)
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    local other_os="linux"
+  else
+    local other_os="darwin"
+  fi
+  create_files "path.zsh" "path.zsh.${other_os}-${arch}"
+  run_dotfiles_fn dotfiles_find "'*.zsh'"
+  [[ "$output" == *"topic/path.zsh"* ]]
+  [[ "$output" != *"${other_os}-${arch}"* ]]
+}
+
+@test "excludes os-arch files for wrong arch" {
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
   if [[ "$(uname -m)" == "arm64" ]]; then
     local other_arch="x86_64"
   else
     local other_arch="arm64"
   fi
-  create_files "path.zsh" "path.zsh.${other_arch}" "path.zsh.${other_arch}-native"
+  create_files "path.zsh" "path.zsh.${os}-${other_arch}"
   run_dotfiles_fn dotfiles_find "'*.zsh'"
-  [[ "$output" == *"path.zsh"* ]]
-  [[ "$output" != *"path.zsh.${other_arch}"* ]]
+  [[ "$output" == *"topic/path.zsh"* ]]
+  [[ "$output" != *"${os}-${other_arch}"* ]]
 }
 
-@test "translated arch finds universal and arch-suffixed but not native-only" {
-  create_files "path.zsh" "path.zsh.x86_64" "path.zsh.x86_64-native" "path.zsh.arm64" "path.zsh.arm64-native"
-  # Simulate x86_64 running on Apple Silicon by overriding uname and sysctl
-  run zsh -c "
-    defaults='$TEST_DIR/empty_defaults'
-    mkdir -p \"\$defaults\"
-    source '${BATS_TEST_DIRNAME}/../lib/dotfiles.zsh'
-    function dotfiles() { echo '$TEST_DIR'; }
-    function uname() {
-      if [[ \"\$1\" == '-m' ]]; then echo 'x86_64'
-      else command uname \"\$@\"
-      fi
-    }
-    function sysctl() {
-      if [[ \"\$2\" == 'machdep.cpu.brand_string' ]]; then echo 'Apple M1'
-      else command sysctl \"\$@\"
-      fi
-    }
-    dotfiles_find '*.zsh'
-  "
-  [[ "$status" -eq 0 ]]
-  [[ "$output" == *"path.zsh.x86_64"* ]]
-  # universal files are still found
-  [[ "$output" == *"topic/path.zsh"* ]]
-  # native-only excluded under translation
-  [[ "$output" != *"x86_64-native"* ]]
-  # other arch excluded
-  [[ "$output" != *"arm64"* ]]
-}
+# Ignored directories
 
 @test "excludes files in directories with .dotfiles_ignore" {
   create_files "path.zsh"
@@ -86,10 +103,13 @@ load test_helper
   [[ "$output" != *"tool.zsh"* ]]
 }
 
-@test "finds env files with architecture suffix" {
+# .env files
+
+@test "finds env files with os-arch suffix" {
   local arch=$(uname -m)
-  create_files "java.env" "java.env.${arch}"
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  create_files "java.env" "java.env.${os}-${arch}"
   run_dotfiles_fn dotfiles_find "'*.env'"
   [[ "$output" == *"java.env"* ]]
-  [[ "$output" == *"java.env.${arch}"* ]]
+  [[ "$output" == *"java.env.${os}-${arch}"* ]]
 }

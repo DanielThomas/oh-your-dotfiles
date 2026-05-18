@@ -41,9 +41,9 @@ The files within are processed automatically by `.zshrc` or the installation pro
 
 Scripts set the environment, manage files, perform installation or enable plugins depending on the file name or extension. Bootstrap can be safely run repeatedly, you'll be prompted for the action you want to take if a destination file or directory already exists.
 
-### Architecture ###
+### Platform ###
 
-The file conventions support an architecture suffix, for instance `path.zsh.x86_64` or `path.zsh.arm64` which will make the configuration apply conditionally to that architecture.
+The file conventions support an os suffix, for instance `path.zsh.darwin` or `path.zsh.linux`, and an os-architecture suffix, for instance `path.zsh.darwin-arm64` or `path.zsh.linux-x86_64`, which will make the configuration apply conditionally to that platform.
 
 Installers are run regardless of the prevailing architecture if the machine supports that architecture (i.e. `x86_64` on `arm64` via Rosetta 2) using `arch` to force the architecture. The `brew` command is also shimmed with a function to use the architecture specific location, `/usr/local` for `x86_64` and `/opt/homebrew` for `arm64` based on the prevailing architecture, run `brew` with `arch -x86_64 brew` in an `arm64` terminal to manually install Intel formulas/casks.
 
@@ -54,7 +54,7 @@ Installer files without a suffix are assumed to be universal and are run using t
 These files set your shell's environment:
 
 - `oh-my-zsh.zsh` Loaded before oh my zsh is sourced, useful for configuration of a theme (ZSH_THEME)
-- `*.env`: Loaded before `path.zsh`. Each line should be `KEY=value`. Values are appended (colon-separated) to existing environment variables, or set if not already defined. Lines starting with `#` are comments
+- `*.env`: Loaded before `path.zsh`. Each line should be `KEY=value`. Variables are set directly, except `PATH` which is prepended to the existing `$PATH`. Lines starting with `#` are comments
 - `path.zsh`: Loaded after `*.env` files, and expected to setup `$PATH`
 - `*.zsh`: Get loaded into your environment
 - `completion.zsh`: Loaded last, and expected to setup autocomplete

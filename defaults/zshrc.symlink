@@ -73,7 +73,7 @@ fi
 
 ## load dotfiles ##
 
-# load env files, appending to existing environment variables
+# load env files
 typeset -U env_files
 env_files=($(dotfiles_find \*.env))
 for file in $env_files
@@ -83,8 +83,8 @@ do
     [[ -z "$line" || "$line" == \#* ]] && continue
     local key="${line%%=*}"
     local val="${line#*=}"
-    if [[ -n "${(P)key}" ]]; then
-      export "$key"="${(P)key}:$val"
+    if [[ "$key" == "PATH" ]]; then
+      export PATH="$val:$PATH"
     else
       export "$key"="$val"
     fi
