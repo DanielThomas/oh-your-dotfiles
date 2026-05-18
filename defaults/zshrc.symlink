@@ -73,6 +73,25 @@ fi
 
 ## load dotfiles ##
 
+# load env files, appending to existing environment variables
+typeset -U env_files
+env_files=($(dotfiles_find \*.env))
+for file in $env_files
+do
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    # skip blank lines and comments
+    [[ -z "$line" || "$line" == \#* ]] && continue
+    local key="${line%%=*}"
+    local val="${line#*=}"
+    if [[ -n "${(P)key}" ]]; then
+      export "$key"="${(P)key}:$val"
+    else
+      export "$key"="$val"
+    fi
+  done < "$file"
+done
+unset env_files
+
 # load the path files
 for file in ${(M)config_files:#*/path.zsh}
 do
