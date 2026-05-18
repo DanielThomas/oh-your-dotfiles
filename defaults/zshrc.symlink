@@ -81,12 +81,12 @@ do
   while IFS= read -r line || [[ -n "$line" ]]; do
     # skip blank lines and comments
     [[ -z "$line" || "$line" == \#* ]] && continue
-    local key="${line%%=*}"
-    local val="${line#*=}"
-    if [[ "$key" == "PATH" ]]; then
-      export PATH="$val:$PATH"
+    local _env_key="${line%%=*}"
+    local _env_val="${line#*=}"
+    if [[ "$_env_key" == "PATH" ]]; then
+      export PATH="$_env_val:$PATH"
     else
-      export "$key"="$val"
+      export "$_env_key"="$_env_val"
     fi
   done < "$file"
 done
