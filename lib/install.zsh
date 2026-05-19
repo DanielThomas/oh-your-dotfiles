@@ -16,13 +16,13 @@ source $libdir/git.zsh
 function link_files() {
   case "$1" in
     link )
-      link_file $2 $3
+      link_file "$2" "$3"
       ;;
     copy )
-      copy_file $2 $3
+      copy_file "$2" "$3"
       ;;
     git )
-      git_clone_or_pull $2 $3
+      git_clone_or_pull "$2" "$3"
       ;;
     * )
       fail "Unknown link type: $1"
@@ -31,26 +31,26 @@ function link_files() {
 }
 
 function link_file() {
-  mkdir -p $(dirname $2)
-  run "linking $1 to $2" "ln -s -f $1 $2"
+  mkdir -p "$(dirname "$2")"
+  run "linking $1 to $2" "ln -s -f $(printf '%q' "$1") $(printf '%q' "$2")"
   success "linked $1 to $2"
 }
 
 function install_link() {
   local source=$1 dest=$2
-  if [ ! -L $dest ] || [ "$(readlink "$dest")" != "$source" ]; then
-    install_file link $source $dest
+  if [ ! -L "$dest" ] || [ "$(readlink "$dest")" != "$source" ]; then
+    install_file link "$source" "$dest"
   fi
 }
 
 function copy_file() {
-  mkdir -p $(dirname $2)
-  run "copying $1 to $2" "cp $1 $2"
+  mkdir -p "$(dirname "$2")"
+  run "copying $1 to $2" "cp $(printf '%q' "$1") $(printf '%q' "$2")"
   success "copied $1 to $2"
 }
 
 function open_file() {
-  run "opening $1" "open $1"
+  run "opening $1" "open $(printf '%q' "$1")"
   success "opened $1"
 }
 
@@ -58,13 +58,13 @@ function install_file() {
   local file_type=$1
   local file_source=$2
   local file_dest=$3
-  if [ -f $file_dest ] || [ -d $file_dest ]; then
+  if [ -f "$file_dest" ] || [ -d "$file_dest" ]; then
     overwrite=false
     backup=false
     skip=false
 
     if [ "$overwrite_all" = "false" ] && [ "$backup_all" = "false" ] && [ "$skip_all" = "false" ] && [ "$skip_all_silent" = "false" ] && [ "$force_all" = "false" ] && [ "$force_all_silent" = "false" ]; then
-      user "File already exists: `basename $file_dest`, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+      user "File already exists: $(basename "$file_dest"), what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
       read -r action
 
       case "$action" in
@@ -88,22 +88,22 @@ function install_file() {
     if [ "$overwrite" = "true" ] || [ "$overwrite_all" = "true" ]; then
       rm -rf "$file_dest"
       success "removed $file_dest"
-      link_files $file_type $file_source $file_dest
+      link_files "$file_type" "$file_source" "$file_dest"
     fi
 
     if [ "$backup" = "true" ] || [ "$backup_all" = "true" ]; then
-      mv $file_dest $file_dest\.backup
+      mv "$file_dest" "$file_dest.backup"
       success "moved $file_dest to $file_dest.backup"
-      link_files $file_type $file_source $file_dest
+      link_files "$file_type" "$file_source" "$file_dest"
     fi
 
     if [[ "$force_all" = "true" ]] || [[ "$skip" = "false" && "$skip_all" = "false" && "$skip_all_silent" = "false" ]]; then
-      link_files $file_type $file_source $file_dest
+      link_files "$file_type" "$file_source" "$file_dest"
     elif [ "$skip_all_silent" = "false" ]; then
       success "skipped $file_source"
     fi
   else
-    link_files $file_type $file_source $file_dest
+    link_files "$file_type" "$file_source" "$file_dest"
   fi
 }
 
@@ -122,14 +122,14 @@ function dotfiles_install() {
   force_all=true
 
   # git repositories - dotfiles can be in nested gitrepo files, so we do multiple passes
-  cloned_repos=()
+  typeset -A cloned_repos
   while true; do
     did_clone=false
-    for file_source in $(dotfiles_find \*.gitrepo); do
-      file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-      if [[ ! " ${cloned_repos[*]} " =~ " $file_source " ]]; then
-        cloned_repos+=($file_source)
-        install_file git $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.gitrepo)"}; do
+      file_dest="$HOME/.$(basename "${file_source%.*}")"
+      if [[ -z "${cloned_repos[$file_source]}" ]]; then
+        cloned_repos[$file_source]=1
+        install_file git "$file_source" "$file_dest"
         did_clone=true
       fi
     done
@@ -139,9 +139,9 @@ function dotfiles_install() {
     fi
   done
 
-  for file_source in $(dotfiles_find \*.themegitrepo); do
-    file_dest="$HOME/.oh-my-zsh/custom/themes/`basename \"${file_source%.*}\"`"
-    install_file git $file_source $file_dest
+  for file_source in ${(f)"$(dotfiles_find \*.themegitrepo)"}; do
+    file_dest="$HOME/.oh-my-zsh/custom/themes/$(basename "${file_source%.*}")"
+    install_file git "$file_source" "$file_dest"
   done
   wait
 
@@ -150,44 +150,44 @@ function dotfiles_install() {
   fi
 
   # symlinks
-  for file_source in $(dotfiles_find_symlink); do
-    file_dest="$HOME/.`basename \"${file_source%.*}\"`"
-    if [ -d $file_source ]; then
-      for entry in $(find "$file_source" -mindepth 1 \( -type d -name "*.symlink" -prune -print \) -o -type f -print); do
+  for file_source in ${(f)"$(dotfiles_find_symlink)"}; do
+    file_dest="$HOME/.$(basename "${file_source%.*}")"
+    if [ -d "$file_source" ]; then
+      while IFS= read -r -d '' entry; do
         entry_dest="${file_dest}${entry#"$file_source"}"
         entry_dest="${entry_dest%.symlink}"
-        install_link $entry $entry_dest
-      done
+        install_link "$entry" "$entry_dest"
+      done < <(find "$file_source" -mindepth 1 \( -type d -name "*.symlink" -prune -print0 \) -o -type f -print0)
     else
-      install_link $file_source $file_dest
+      install_link "$file_source" "$file_dest"
     fi
   done
 
   if [[ "Darwin" == "$(uname)" ]]; then
     # preferences
-    for file_source in $(dotfiles_find \*.plist); do
-      file_dest="$HOME/Library/Preferences/`basename $file_source`"
-      install_file copy $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.plist)"}; do
+      file_dest="$HOME/Library/Preferences/$(basename "$file_source")"
+      install_file copy "$file_source" "$file_dest"
     done
 
     # fonts
-    for file_source in $(dotfiles_find \*.otf); do
-      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-      install_file copy $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.otf)"}; do
+      file_dest="$HOME/Library/Fonts/$(basename "$file_source")"
+      install_file copy "$file_source" "$file_dest"
     done
-    for file_source in $(dotfiles_find \*.ttf); do
-      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-      install_file copy $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.ttf)"}; do
+      file_dest="$HOME/Library/Fonts/$(basename "$file_source")"
+      install_file copy "$file_source" "$file_dest"
     done
-    for file_source in $(dotfiles_find \*.ttc); do
-      file_dest="$HOME/Library/Fonts/$(basename $file_source)"
-      install_file copy $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.ttc)"}; do
+      file_dest="$HOME/Library/Fonts/$(basename "$file_source")"
+      install_file copy "$file_source" "$file_dest"
     done
 
     # launch agents
-    for file_source in $(dotfiles_find \*.launchagent); do
-      file_dest="$HOME/Library/LaunchAgents/$(basename $file_source | sed 's/.launchagent//')"
-      install_file copy $file_source $file_dest
+    for file_source in ${(f)"$(dotfiles_find \*.launchagent)"}; do
+      file_dest="$HOME/Library/LaunchAgents/$(basename "$file_source" | sed 's/.launchagent//')"
+      install_file copy "$file_source" "$file_dest"
     done
   fi
 }

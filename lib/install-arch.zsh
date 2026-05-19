@@ -39,15 +39,12 @@ function run_installers() {
 
   dotfiles_find_installer install.sh | while read installer ; do run "running ${installer}" "${installer}" ; done
 
-  for file_source in $(dotfiles_find_installer install.open); do
-    OLD_IFS=$IFS
-    IFS=$'\n'
-    basedir="$(dirname $file_source)"
-    for file in `cat $file_source`; do
+  for file_source in ${(f)"$(dotfiles_find_installer install.open)"}; do
+    basedir="$(dirname "$file_source")"
+    while IFS= read -r file; do
       canonical_file="$basedir/$file"
       open_file "$canonical_file"
-    done
-    IFS=$OLD_IFS
+    done < "$file_source"
   done
 }
 
