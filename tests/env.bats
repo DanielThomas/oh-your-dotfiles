@@ -18,6 +18,7 @@ run_env_loader() {
         [[ -z \"\$line\" || \"\$line\" == \#* ]] && continue
         local key=\"\${line%%=*}\"
         local val=\"\${line#*=}\"
+        [[ \"\$val\" == \"~\" || \"\$val\" == \"~/\"* ]] && val=\"\$HOME\${val:1}\"
         if [[ \"\$key\" == \"PATH\" ]]; then
           export PATH=\"\$val:\$PATH\"
         else
@@ -64,4 +65,34 @@ run_env_loader() {
   echo "JAVA_OPTS=-Xmx=512m" > "$TEST_TOPIC_DIR/java.env"
   run_env_loader 'echo $JAVA_OPTS'
   [[ "$output" == "-Xmx=512m" ]]
+}
+
+@test "expands ~ to HOME in values" {
+  echo "GOPATH=~/go" > "$TEST_TOPIC_DIR/dev.env"
+  run_env_loader 'echo $GOPATH'
+  [[ "$output" == "$HOME/go" ]]
+}
+
+@test "expands bare ~ to HOME" {
+  echo "MY_DIR=~" > "$TEST_TOPIC_DIR/dev.env"
+  run_env_loader 'echo $MY_DIR'
+  [[ "$output" == "$HOME" ]]
+}
+
+@test "expands ~ in PATH values" {
+  echo "PATH=~/bin" > "$TEST_TOPIC_DIR/dev.env"
+  run_env_loader 'echo $PATH'
+  [[ "$output" == "$HOME/bin:"* ]]
+}
+
+@test "does not expand ~ in the middle of values" {
+  echo "OPTS=foo~bar" > "$TEST_TOPIC_DIR/dev.env"
+  run_env_loader 'echo $OPTS'
+  [[ "$output" == "foo~bar" ]]
+}
+
+@test "does not expand ~user syntax" {
+  echo "DIR=~nobody" > "$TEST_TOPIC_DIR/dev.env"
+  run_env_loader 'echo $DIR'
+  [[ "$output" == "~nobody" ]]
 }

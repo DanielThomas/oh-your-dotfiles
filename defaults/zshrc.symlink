@@ -83,6 +83,8 @@ do
     [[ -z "$line" || "$line" == \#* ]] && continue
     local _env_key="${line%%=*}"
     local _env_val="${line#*=}"
+    # expand leading ~ to $HOME
+    [[ "$_env_val" == "~" || "$_env_val" == "~/"* ]] && _env_val="$HOME${_env_val:1}"
     if [[ "$_env_key" == "PATH" ]]; then
       export PATH="$_env_val:$PATH"
     else

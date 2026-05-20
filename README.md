@@ -54,7 +54,7 @@ Installer files without a suffix are assumed to be universal and are run using t
 These files set your shell's environment:
 
 - `oh-my-zsh.zsh` Loaded before oh my zsh is sourced, useful for configuration of a theme (ZSH_THEME)
-- `*.env`: Loaded before `path.zsh`. Each line should be `KEY=value`. Variables are set directly, except `PATH` which is prepended to the existing `$PATH`. Lines starting with `#` are comments
+- `*.env`: Loaded before `path.zsh`. Each line should be `KEY=value`. Variables are set directly, except `PATH` which is prepended to the existing `$PATH`. A leading `~` in values is expanded to `$HOME`. Lines starting with `#` are comments
 - `path.zsh`: Loaded after `*.env` files, and expected to setup `$PATH`
 - `*.zsh`: Get loaded into your environment
 - `completion.zsh`: Loaded last, and expected to setup autocomplete
