@@ -151,7 +151,7 @@ function dotfiles_install() {
 
   # symlinks
   for file_source in ${(f)"$(dotfiles_find_symlink)"}; do
-    file_dest="$HOME/.$(basename "${file_source%.*}")"
+    file_dest="$(dotfiles_symlink_dest "$file_source")"
     if [ -d "$file_source" ]; then
       while IFS= read -r -d '' entry; do
         entry_dest="${file_dest}${entry#"$file_source"}"

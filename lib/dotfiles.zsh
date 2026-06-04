@@ -50,7 +50,15 @@ function dotfiles_find_installer() {
 }
 
 function dotfiles_find_symlink() {
-  find -L $(dotfiles) $(dotfiles_find_ignore) -name "*.symlink" -prune
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  local arch=$(uname -m)
+  find -L $(dotfiles) $(dotfiles_find_ignore) \( -name "*.symlink" -o -name "*.symlink.${os}" -o -name "*.symlink.${os}-${arch}" \) -prune
+}
+
+function dotfiles_symlink_dest() {
+  local name=$(basename "$1")
+  name="${name%.symlink*}"
+  echo "$HOME/.$name"
 }
 
 function dotfiles_find_ignore() {

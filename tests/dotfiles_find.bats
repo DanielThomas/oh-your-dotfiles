@@ -113,3 +113,73 @@ load test_helper
   [[ "$output" == *"java.env"* ]]
   [[ "$output" == *"java.env.${os}-${arch}"* ]]
 }
+
+# Symlinks
+
+@test "dotfiles_find_symlink finds plain symlink files" {
+  create_files "npmrc.symlink"
+  run_dotfiles_fn dotfiles_find_symlink
+  [[ "$output" == *"npmrc.symlink"* ]]
+}
+
+@test "dotfiles_find_symlink finds os suffixed symlink files" {
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  create_files "npmrc.symlink.${os}"
+  run_dotfiles_fn dotfiles_find_symlink
+  [[ "$output" == *"npmrc.symlink.${os}"* ]]
+}
+
+@test "dotfiles_find_symlink excludes wrong os symlink files" {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    local other_os="linux"
+  else
+    local other_os="darwin"
+  fi
+  create_files "npmrc.symlink.${other_os}"
+  run_dotfiles_fn dotfiles_find_symlink
+  [[ "$output" != *"npmrc.symlink.${other_os}"* ]]
+}
+
+@test "dotfiles_find_symlink finds os-arch suffixed symlink files" {
+  local arch=$(uname -m)
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  create_files "npmrc.symlink.${os}-${arch}"
+  run_dotfiles_fn dotfiles_find_symlink
+  [[ "$output" == *"npmrc.symlink.${os}-${arch}"* ]]
+}
+
+@test "dotfiles_find_symlink excludes wrong arch symlink files" {
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  if [[ "$(uname -m)" == "arm64" ]]; then
+    local other_arch="x86_64"
+  else
+    local other_arch="arm64"
+  fi
+  create_files "npmrc.symlink.${os}-${other_arch}"
+  run_dotfiles_fn dotfiles_find_symlink
+  [[ "$output" != *"npmrc.symlink.${os}-${other_arch}"* ]]
+}
+
+@test "dotfiles_symlink_dest strips plain symlink suffix" {
+  run zsh -c "
+    source '${BATS_TEST_DIRNAME}/../lib/dotfiles.zsh'
+    dotfiles_symlink_dest '/path/to/npmrc.symlink'
+  "
+  [[ "$output" == *"/.npmrc" ]]
+}
+
+@test "dotfiles_symlink_dest strips os symlink suffix" {
+  run zsh -c "
+    source '${BATS_TEST_DIRNAME}/../lib/dotfiles.zsh'
+    dotfiles_symlink_dest '/path/to/npmrc.symlink.linux'
+  "
+  [[ "$output" == *"/.npmrc" ]]
+}
+
+@test "dotfiles_symlink_dest strips os-arch symlink suffix" {
+  run zsh -c "
+    source '${BATS_TEST_DIRNAME}/../lib/dotfiles.zsh'
+    dotfiles_symlink_dest '/path/to/npmrc.symlink.linux-x86_64'
+  "
+  [[ "$output" == *"/.npmrc" ]]
+}
