@@ -11,7 +11,11 @@ if [ "Darwin" = "$(uname)" ]; then
       ;;
   esac
 else
-  HOMEBREW_PREFIX="$HOME/.linuxbrew"
+  if [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+    HOMEBREW_PREFIX="$HOME/.linuxbrew"
+  else
+    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+  fi
 fi
 export HOMEBREW_PREFIX
 
