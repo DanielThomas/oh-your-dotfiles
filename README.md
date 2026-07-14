@@ -84,7 +84,7 @@ Installation steps during bootstrap can be handled in several ways:
 - `install.sh`: An installation shellscript
 - `install.homebrew`: A list of Homebrew formulas to install. Use `install.linuxbrew` for Linux
 - `install.homebrew-cask`: A list of Homebrew casks to install
-- `install.homebrew-tap`: A list of Homebrew taps
+- `install.homebrew-tap`: A list of Homebrew taps. On Homebrew versions that require tap trust, listed taps are trusted in full
 - `install.mas`: A list of App Store apps to install
 - `install.npm`: A list of npm packages to install to the Homebrew `node` installation
 - `install.open`: A list of files to be handled by the default application association using the `open` command

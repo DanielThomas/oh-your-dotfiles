@@ -38,3 +38,31 @@ run_default_homebrew_prefix() {
   [[ "${lines[0]}" == "$TEST_DIR/home/.linuxbrew" ]]
   [[ "${lines[1]}" == "$TEST_DIR/home/.linuxbrew" ]]
 }
+
+@test "trusts declared taps when Homebrew supports tap trust" {
+  cat > "$TEST_DIR/install.homebrew-tap" <<'EOF'
+atlassian/tap https://github.com/atlassian/homebrew-tap
+gdubw/gng
+EOF
+
+  run zsh -c '
+    source "$1/lib/homebrew.zsh"
+    function dotfiles_find_installer() { echo "$2/install.homebrew-tap"; }
+    function brew_run() {
+      if [[ "$1" == "tap" && "$#" -eq 1 ]]; then
+        echo "gdubw/gng"
+      elif [[ "$1" == "command" && "$2" == "trust" ]]; then
+        return 0
+      else
+        echo "$*"
+      fi
+    }
+    function run() { eval "$2"; }
+    brew_taps
+  ' -- "${BATS_TEST_DIRNAME}/.." "$TEST_DIR"
+
+  [[ "$status" -eq 0 ]]
+  [[ "${lines[0]}" == "tap atlassian/tap https://github.com/atlassian/homebrew-tap" ]]
+  [[ "${lines[1]}" == "trust --tap atlassian/tap" ]]
+  [[ "${lines[2]}" == "trust --tap gdubw/gng" ]]
+}

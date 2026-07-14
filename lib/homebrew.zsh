@@ -118,12 +118,19 @@ function brew_check_and_install() {
 
 function brew_taps() {
   brew_tapped=$(brew_run tap 2> /dev/null)
+  local tap_trust_supported=false
+  if [[ -z "$HOMEBREW_NO_REQUIRE_TAP_TRUST" ]] && brew_run command trust > /dev/null 2>&1; then
+    tap_trust_supported=true
+  fi
   for tapfile in `dotfiles_find_installer install.homebrew-tap`; do
     while read -r LINE || [[ -n "$LINE" ]]; do
       args=( ${=LINE} )
       tap="${args[1]}"
       if ! echo "$brew_tapped" | grep -q "$tap"; then
         run "tapping ${args[1]}" "brew_run tap ${args[1]} ${args[2]}"
+      fi
+      if [[ "$tap_trust_supported" == true ]]; then
+        run "trusting ${tap}" "brew_run trust --tap ${tap}"
       fi
     done < $tapfile
   done
