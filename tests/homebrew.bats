@@ -39,6 +39,35 @@ run_default_homebrew_prefix() {
   [[ "${lines[1]}" == "$TEST_DIR/home/.linuxbrew" ]]
 }
 
+@test "installs formulas when Homebrew has no inventory yet" {
+  cat > "$TEST_DIR/install.linuxbrew" <<'EOF'
+ripgrep
+EOF
+
+  run zsh -c '
+    set -e
+    source "$1/lib/homebrew.zsh"
+    test_dir="$2"
+    function dotfiles_find_installer() {
+      if [[ "$1" == "install.linuxbrew" ]]; then
+        echo "$test_dir/install.linuxbrew"
+      fi
+    }
+    function brew_check_and_install() { true; }
+    function brew_run() {
+      if [[ "$1" == "ls" ]]; then
+        return 1
+      fi
+      echo "$*"
+    }
+    function run() { eval "$2"; }
+    brew_install_formulas
+  ' -- "${BATS_TEST_DIRNAME}/.." "$TEST_DIR"
+
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == "install --formula ripgrep" ]]
+}
+
 @test "trusts declared taps when Homebrew supports tap trust" {
   cat > "$TEST_DIR/install.homebrew-tap" <<'EOF'
 atlassian/tap https://github.com/atlassian/homebrew-tap
@@ -47,7 +76,8 @@ EOF
 
   run zsh -c '
     source "$1/lib/homebrew.zsh"
-    function dotfiles_find_installer() { echo "$2/install.homebrew-tap"; }
+    test_dir="$2"
+    function dotfiles_find_installer() { echo "$test_dir/install.homebrew-tap"; }
     function brew_run() {
       if [[ "$1" == "tap" && "$#" -eq 1 ]]; then
         echo "gdubw/gng"

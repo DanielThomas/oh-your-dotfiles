@@ -50,14 +50,14 @@ function brew_install_formulas() {
   fi
 
   if [ -n "$formulas" ]; then
-    brew_installed=$(brew_run ls --versions 2> /dev/null)
+    brew_installed=$(brew_run ls --formula --versions 2> /dev/null || true)
     for file in `dotfiles_find_installer install.${extension}`; do
       brew_install formula "$file"
     done
   fi
 
   if [ -n "$casks" ]; then
-    brew_installed=$(brew_run ls --cask --versions 2> /dev/null)
+    brew_installed=$(brew_run ls --cask --versions 2> /dev/null || true)
     for file in `dotfiles_find_installer install.${extension}-cask`; do
       brew_install cask "$file"
     done
