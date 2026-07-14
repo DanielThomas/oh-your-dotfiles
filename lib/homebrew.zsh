@@ -23,7 +23,12 @@ function brew_prefix() {
       ;;
     esac
   else
-    echo "$HOME/.linuxbrew"
+    # Prefer standard path for bottle compatibility; keep existing $HOME installs working
+    if [[ -x "$HOME/.linuxbrew/bin/brew" ]]; then
+      echo "$HOME/.linuxbrew"
+    else
+      echo "/home/linuxbrew/.linuxbrew"
+    fi
   fi
 }
 
