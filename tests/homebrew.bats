@@ -68,7 +68,7 @@ EOF
   [[ "$output" == "install --formula ripgrep" ]]
 }
 
-@test "trusts declared taps when Homebrew supports tap trust" {
+@test "trusts only untrusted declared taps when Homebrew supports tap trust" {
   cat > "$TEST_DIR/install.homebrew-tap" <<'EOF'
 atlassian/tap https://github.com/atlassian/homebrew-tap
 gdubw/gng
@@ -83,6 +83,15 @@ EOF
         echo "gdubw/gng"
       elif [[ "$1" == "command" && "$2" == "trust" ]]; then
         return 0
+      elif [[ "$1" == "tap-info" ]]; then
+        cat <<EOF
+[
+  {
+    "name": "gdubw/gng",
+    "trusted": true
+  }
+]
+EOF
       else
         echo "$*"
       fi
@@ -94,5 +103,5 @@ EOF
   [[ "$status" -eq 0 ]]
   [[ "${lines[0]}" == "tap atlassian/tap https://github.com/atlassian/homebrew-tap" ]]
   [[ "${lines[1]}" == "trust --tap atlassian/tap" ]]
-  [[ "${lines[2]}" == "trust --tap gdubw/gng" ]]
+  [[ "${#lines[@]}" -eq 2 ]]
 }
