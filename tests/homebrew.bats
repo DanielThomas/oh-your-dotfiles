@@ -39,6 +39,40 @@ run_default_homebrew_prefix() {
   [[ "${lines[1]}" == "$TEST_DIR/home/.linuxbrew" ]]
 }
 
+@test "bootstraps Homebrew from the main branch" {
+  run zsh -c '
+    source "$1/lib/homebrew.zsh"
+    test_prefix="$2"
+    function brew_prefix() { echo "$test_prefix"; }
+    function brew_command() { echo "$test_prefix/bin/brew"; }
+    function info() { :; }
+    function run() { print -r -- "$2"; }
+    function brew_taps() { :; }
+    brew_check_and_install
+  ' -- "${BATS_TEST_DIRNAME}/.." "$TEST_DIR/homebrew"
+
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == *"curl -fL https://github.com/Homebrew/brew/tarball/main"* ]]
+  [[ "$output" != *"tarball/master"* ]]
+}
+
+@test "reports Homebrew tap listing failures" {
+  run zsh -c '
+    set -e
+    source "$1/lib/terminal.zsh"
+    source "$1/lib/homebrew.zsh"
+    function brew_run() {
+      print -u2 "Homebrew startup failed"
+      return 1
+    }
+    brew_taps
+  ' -- "${BATS_TEST_DIRNAME}/.."
+
+  [[ "$status" -ne 0 ]]
+  [[ "$output" == *"Homebrew startup failed"* ]]
+  [[ "$output" == *"failed to list Homebrew taps"* ]]
+}
+
 @test "installs formulas when Homebrew has no inventory yet" {
   cat > "$TEST_DIR/install.linuxbrew" <<'EOF'
 ripgrep

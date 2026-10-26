@@ -111,13 +111,15 @@ function brew_check_and_install() {
     run "creating directory $prefix" "sudo mkdir -p ${prefix}"
     owner="$(whoami):$(id -g -n)"
     run "changing ownership of $prefix to $owner" "sudo chown -R ${owner} ${prefix}"
-    run "downloading homebrew and extracting to $prefix" "curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C ${prefix}"
+    run "downloading homebrew and extracting to $prefix" "curl -fL https://github.com/Homebrew/brew/tarball/main | tar xz --strip 1 -C ${prefix}"
   fi
   brew_taps
 }
 
 function brew_taps() {
-  brew_tapped=$(brew_run tap 2> /dev/null)
+  if ! brew_tapped=$(brew_run tap); then
+    fail "failed to list Homebrew taps"
+  fi
   local tap_trust_supported=false
   local brew_trusted=""
   if [[ -z "$HOMEBREW_NO_REQUIRE_TAP_TRUST" ]] && brew_run command trust > /dev/null 2>&1; then
