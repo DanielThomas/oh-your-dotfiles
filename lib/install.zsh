@@ -126,7 +126,7 @@ function dotfiles_install() {
   while true; do
     did_clone=false
     for file_source in ${(f)"$(dotfiles_find \*.gitrepo)"}; do
-      file_dest="$HOME/.$(basename "${file_source%.*}")"
+      file_dest="$HOME/.$(basename "${file_source%.gitrepo*}")"
       if [[ -z "${cloned_repos[$file_source]}" ]]; then
         cloned_repos[$file_source]=1
         install_file git "$file_source" "$file_dest"
